@@ -1,13 +1,12 @@
 const { SlashCommandBuilder } = require( 'discord.js' );
 const { getVoiceConnection } = require( '@discordjs/voice' );
 const Audio = require( '../modules/audio' );
-const Embed = require( '../modules/embed' );
 
 module.exports =
 {
     data : new SlashCommandBuilder( )
-        .setName( 'skip' )
-        .setDescription( 'Play the next song in queue' ),
+        .setName( 'shuffle' )
+        .setDescription( 'Shuffle the playlist' ),
         
     async execute( interaction )
     {
@@ -30,24 +29,13 @@ module.exports =
         }
 
         const audio = new Audio( interaction.guildId );
+        const number = audio.playlist.length - 1;
 
-        if ( !audio.playlist[ 1 ] )
+        audio.once( 'shuffle', ( ) =>
         {
-            interaction.editReply( "✅\nAll songs in the queue have been played" );
-            audio.reset( );
-
-            return;
-        }
-
-        audio.once( 'play', ( ) =>
-        {
-            const embed = new Embed( ).songPlay( audio.playlist.at( 0 ) );
-
-            interaction.editReply( { content : '✅', embeds : [ embed ] } );
-
-            return;
+            interaction.editReply( `${number} songs were shuffled` );
         } );
 
-        audio.skip( );
+        audio.shuffle( );
     }
 };

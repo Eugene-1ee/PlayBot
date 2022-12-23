@@ -1,44 +1,45 @@
-const { SlashCommandBuilder } = require( "@discordjs/builders" );
-const { MessageEmbed } = require( "discord.js" );
+const { SlashCommandBuilder } = require( 'discord.js' );
+const { getVoiceConnection } = require( '@discordjs/voice' );
+const Audio = require( '../modules/audio' );
 
-module.exports = {
-	data: new SlashCommandBuilder()
-        .setName( "pause" )
-        .setDescription( "노래를 일시정지합니다" ),
+module.exports =
+{
+    data : new SlashCommandBuilder( )
+        .setName( 'pause' )
+        .setDescription( 'Pause the music' ),
         
-	async execute( interaction, client )
+    async execute( interaction )
     {
-        await interaction.deferReply();
+        await interaction.deferReply( );
 
-		const queue = client.player.getQueue( interaction.guildId );
-
-		if ( !queue ) //대기열 확인
+        if ( !getVoiceConnection( interaction.guildId ) )
         {
+            interaction.editReply( 'Bot is not connecting to voice channel' );
             return;
         }
-		else if ( interaction.member.voice.channel !== queue.connection.channel ) //같은 통화방인지 확인
+        else if ( !interaction.member.voice.channelId )
         {
-            await interaction.editReply( { embeds : [ 
-                new MessageEmbed()
-                .setDescription( `You can only interact on ${queue.connection.channel}!` )
-                .setColor( '#ff0000' )
-            ] } );
+            interaction.editReply( 'Interactive only on the same voice channel' );
+            return;
         }
-		else if ( queue.connection.paused == false )
-		{
-			queue.setPaused( true );
-            
-            await interaction.editReply( { embeds : [ 
-            new MessageEmbed()
-            .setDescription( "⏸ Music paused!\nIf you want to resume, enter **/resume**" )
-            .setColor( '#e38796' ) ] } );
-		}
-		else if ( queue.connection.paused == true )
-		{
-            await interaction.editReply( { embeds : [ 
-            new MessageEmbed()
-            .setDescription( "⏸ It's already paused." )
-            .setColor( '#bc95fc' ) ] } );
-		}
-	}
+        else if ( getVoiceConnection( interaction.guildId ).joinConfig.channelId !== interaction.member.voice.channelId )
+        {
+            interaction.editReply( 'Interactive only on the same voice channel' );
+            return;
+        }
+
+        const audio = new Audio( interaction.guildId );
+
+        audio.once( 'pause', ( ) =>
+        {
+            interaction.editReply( 'The music has been paused' );
+        } );
+
+        audio.once( 'cannotpause', ( ) =>
+        {
+            interaction.editReply( { content : 'The music has already been paused', ephemeral : true } );
+        } );
+
+        audio.pause( );
+    }
 };

@@ -1,13 +1,13 @@
 const { SlashCommandBuilder } = require( 'discord.js' );
 const { getVoiceConnection } = require( '@discordjs/voice' );
 const Audio = require( '../modules/audio' );
-const Embed = require( '../modules/embed' );
+const fs = require( 'fs' );
 
 module.exports =
 {
     data : new SlashCommandBuilder( )
-        .setName( 'skip' )
-        .setDescription( 'Play the next song in queue' ),
+        .setName( 'leave' )
+        .setDescription( 'Leave the voice channel' ),
         
     async execute( interaction )
     {
@@ -29,25 +29,34 @@ module.exports =
             return;
         }
 
-        const audio = new Audio( interaction.guildId );
+        const connection = getVoiceConnection( interaction.guildId );
 
-        if ( !audio.playlist[ 1 ] )
+        if ( connection )
         {
-            interaction.editReply( "✅\nAll songs in the queue have been played" );
-            audio.reset( );
-
+            connection.destroy( );
+        }
+        else
+        {
+            await interaction.editReply( { content : 'The bot is not inside the voice channel', ephemeral : true } );
             return;
         }
 
-        audio.once( 'play', ( ) =>
+        const Checked = fs.existsSync( `temp/${ interaction.guildId }.ogg` );
+        if ( Checked )
         {
-            const embed = new Embed( ).songPlay( audio.playlist.at( 0 ) );
+            fs.unlink( `temp/${ interaction.guildId }.ogg`, err => {
+                if ( err )
+                {
+                    throw err;
+                }
+              
+                console.log( `(Music)${ interaction.guildId }.ogg is deleted.` );
+            } );
+        }
 
-            interaction.editReply( { content : '✅', embeds : [ embed ] } );
+        const audio = new Audio( interaction.guildId );
+        audio.reset( );
 
-            return;
-        } );
-
-        audio.skip( );
+        await interaction.editReply( `Bang!` );
     }
 };

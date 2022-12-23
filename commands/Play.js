@@ -1,139 +1,161 @@
-const { SlashCommandBuilder } = require( "@discordjs/builders" );
-const { MessageEmbed } = require( "discord.js" );
-const { QueryType } = require( "discord-player" );
+const { SlashCommandBuilder } = require( 'discord.js' );
+const { getVoiceConnection, joinVoiceChannel } = require( '@discordjs/voice' );
+const Audio = require( '../modules/audio' );
+const Embed = require( '../modules/embed' );
+const ytpl = require( 'ytpl' );
+const ytdl = require( 'ytdl-core' );
+const YouTube = require( 'youtube-node' );
+const { youtubeApiKey } = require( '../config.json' );
+const youtube = new YouTube();
+youtube.setKey( youtubeApiKey );
 
-module.exports = {
-    data : new SlashCommandBuilder()
-        .setName( "play" )
-        .setDescription( "유튜브에서 노래를 재생합니다" )
-        .addStringOption( option => option
-            .setName( "검색" )
-            .setDescription( "영상/재생목록의 링크 또는 검색어를 입력해주세요" )
-            .setRequired( true ) ),
-
-async execute( interaction, client )
+module.exports =
 {
-    await interaction.deferReply();
-
-    if ( !interaction.member.voice.channel ) //음성채널 접속 확인
-    {
-        const Embed = new MessageEmbed()
-        .setDescription( `Please go into the voice channel first!` )
-        .setColor( '#ff0000' );
-
-        await interaction.editReply( { embeds : [ Embed ] } );
-    }
-    else
-    {
-        const queue = await client.player.createQueue( interaction.guild );
-
-        const url = interaction.options.getString( "검색" );
-
-        let connection;
-
-        if ( !queue.connection && interaction.member.voice.channel.joinable == false )
-        {
-            const Embed = new MessageEmbed()
-            .setDescription( `${interaction.member.voice.channel}\nI can't join the channel!` )
-            .setColor( '#9aa1c9' );
-
-            await interaction.editReply( { embeds : [ Embed ] } );
-                    
-            queue.destroy();
-
-            return;
-        }
-        else if ( !queue.connection )
-        {
-            await queue.connect( interaction.member.voice.channel );
-            await console.log( `#${queue.connection.channel.name} 음성채널 접속` );
-
-            connection = true;
-        }
-        else if ( interaction.member.voice.channel !== queue.connection.channel ) //같은 통화방인지 확인
-        {
-            const Embed = new MessageEmbed()
-            .setDescription( `I'm playing music on ${queue.connection.channel}!` )
-            .setColor( '#ff0000' );
-
-            await interaction.editReply( { embeds : [ Embed ] } );
-
-            return;
-        }
+    data : new SlashCommandBuilder( )
+        .setName( 'play' )
+        .setDescription( 'Play the music' )
+        .addStringOption( option => option
+            .setName( 'search' )
+            .setDescription( 'Please enter a song Name/Url' ) ),
             
-        if ( url.indexOf( 'youtube.com/playlist?list=' ) !== -1 ) // 검색 내용이 재생목록 링크일 경우
-        {
-            const result = await client.player.search ( url,
-            {
-                requestedBy: interaction.user.id,
-                searchEngine: QueryType.YOUTUBE_PLAYLIST
-            } );
-                    
-            if ( result.tracks.length === 0 )
-            {
-                const Embed = new MessageEmbed()
-                .setDescription( `No results!` )
-                .setColor( '#9aa1c9' );
+    async execute( interaction )
+    {
+        await interaction.deferReply( );
 
-                await interaction.editReply( { embeds : [ Embed ] } );
+        const url = interaction.options.getString( 'search' );
+        const audio = new Audio( interaction.guildId );
+
+        let connection = getVoiceConnection( interaction.guildId );
+        if ( !connection )
+        {
+            if ( interaction.member.voice.channelId )
+            {
+                connection = joinVoiceChannel(
+                {
+                    channelId : interaction.member.voice.channelId,
+                    guildId : interaction.guildId,
+                    adapterCreator : interaction.guild.voiceAdapterCreator
+                } );
+                connection.subscribe( audio.player );
             }
             else
             {
-                const playlist = result.playlist;
-                        
-                await queue.addTracks( result.tracks );
-
-                const text = `:white_check_mark: **${playlist.title}** successfully added!`;
-
-                const Embed = new MessageEmbed()
-                .setDescription( `**[${playlist.title}](${playlist.url})**\n\n${result.tracks.length} song` )
-                .setColor( '#d395f9' )
-                .setFooter( { text : `Added by ${interaction.user.username + '#' + interaction.user.discriminator}` , iconURL : `https://cdn.discordapp.com/avatars/${interaction.user.id}/${interaction.user.avatar}.webp` } );
-
-                await interaction.editReply( { content : text, embeds : [ Embed ] } );
-
-                if ( connection )
-                {
-                    await queue.play();
-                }
+                await interaction.editReply( { content: 'Please go into the voice channel first!', ephemeral : true } );
+                return;
             }
         }
-        else //재생목록 링크가 아닐 경우
+        else if ( !interaction.member.voice.channelId )
         {
-            const result = await client.player.search( url, 
+            interaction.editReply( 'Interactive only on the same voice channel' );
+            return;
+        }
+        else if ( getVoiceConnection( interaction.guildId ).joinConfig.channelId !== interaction.member.voice.channelId )
+        {
+            interaction.editReply( 'Interactive only on the same voice channel' );
+            return;
+        }
+        
+        audio.once( 'play', ( ) =>
+        {
+            const embed = new Embed( ).songPlay( audio.playlist[ 0 ] );
+
+            interaction.editReply( { embeds : [ embed ] } );
+
+            return;
+        } );
+
+        audio.once( 'add', ( length ) =>
+        {
+            if ( length > 1 )
             {
-                requestedBy: interaction.user.id,
-                searchEngine: QueryType.AUTO
-            } );
-                    
-            if ( result.tracks.length === 0 )
-            {
-                await interaction.editReply( { embeds : [ 
-                    new MessageEmbed()
-                    .setDescription( `No results!` )
-                    .setColor( '#9aa1c9' )
-                ] } );
+                interaction.editReply( `${length} songs added to the queue` );
             }
             else
             {
-                const song = result.tracks[0];
-                        
-                await queue.addTrack( song );
+                const embed = new Embed( ).songAdd( audio.playlist.at( -1 ) );
 
-                const text = `:white_check_mark: **${song.title}** successfully added!`;
-                        
-                const Embed = new MessageEmbed()
-                .setDescription( `[${song.title}](${song.url})\n\nDuration : ${song.duration}` )
-                .setColor( '#996ae4' )
-                .setFooter( { text : `Added by ${interaction.user.username + '#' + interaction.user.discriminator}` , iconURL : `https://cdn.discordapp.com/avatars/${interaction.user.id}/${interaction.user.avatar}.webp` } );
+                interaction.editReply( { content : '▼ Added successfully!', embeds : [ embed ] } );
+            }
+        } );
 
-                await interaction.editReply( { content : text, embeds : [ Embed ] } );
+        audio.once( 'error', ( error ) =>
+        {
+            console.error( `Error: ${error.message}` );
+            if ( error.code == 'invalidurl' )
+            {
+                interaction.editReply( { content: 'This URL is unknown', ephemeral : true } );
+            }
+            else if ( error.code == 'unknownvideo' )
+            {
+                interaction.editReply( { content: 'Unknown video', ephemeral : true } );
+            }
+            else if ( error.code == 'unknownplaylist' )
+            {
+                interaction.editReply( { content: 'Unknown playlist', ephemeral : true } );
+            }
+            else if ( error.code == 'noplaylist' )
+            {
+                interaction.editReply( { content: 'The playlist is empty', ephemeral : true } );
+            }
+            else if ( error.code == 'longplaylist' )
+            {
+                interaction.editReply( { content: 'Playlists of more than 50 songs cannot be added to the queue!', ephemeral : true } );
+            }
+            else
+            {
+                interaction.editReply( { content: `Error 404\nError: ${ error.message }`, ephemeral : true } );
+            }
 
-                if ( connection )
+            return;
+        } );
+
+        if ( !audio.status.playing )
+        {
+            if ( !url || ytpl.validateID( url ) || ytdl.validateURL( url ) )
+            {
+                audio.play( url );
+            }
+            else
+            {
+                await youtube.search( url, 1, function ( err, result )
                 {
-                    await queue.play();
-                }
+                    if ( err )
+                    {
+                        console.log( err );
+                        interaction.editReply( `Error 404` );
+                        return;
+                    }
+                    const link = "https://www.youtube.com/watch?v=" + result[ "items" ][ 0 ]["id"]["videoId"];
+
+                    audio.play( link );
+                } );
+            }
+        }
+        else
+        {
+            if ( !url )
+            {
+                interaction.editReply( `Already playing...` );
+            }
+            else if ( ytpl.validateID( url ) || ytdl.validateURL( url ) )
+            {
+                audio.add( url );
+            }
+            else
+            {
+                await youtube.search( url, 1, function ( err, result )
+                {
+                    if ( err )
+                    {
+                        console.log( err );
+                        interaction.editReply( `Error 404` );
+                        return;
+                    }
+                    const link = "https://www.youtube.com/watch?v=" + result[ "items" ][ 0 ]["id"]["videoId"];
+
+                    audio.add( link );
+                } );
             }
         }
     }
-} } 
+};

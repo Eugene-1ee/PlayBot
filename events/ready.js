@@ -1,10 +1,17 @@
+const { Events, ActivityType } = require( 'discord.js' );
+const reset = require( '../modules/reset' );
+
 module.exports =
 {
-    name : 'ready',
+    name : Events.ClientReady,
     once : true,
+
     execute( client )
     {
-        client.user.setActivity( '피아노 연주' , { type : 'LISTENING' } );
+        reset();
+
+        client.user.setActivity({ name: 'Piano', type: ActivityType.Playing });
+
         console.log( `${client.user.tag} Excute.` );
-    }
+    },
 };

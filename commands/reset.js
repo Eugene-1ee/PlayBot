@@ -1,14 +1,13 @@
 const { SlashCommandBuilder } = require( 'discord.js' );
 const { getVoiceConnection } = require( '@discordjs/voice' );
 const Audio = require( '../modules/audio' );
-const Embed = require( '../modules/embed' );
 
 module.exports =
 {
     data : new SlashCommandBuilder( )
-        .setName( 'skip' )
-        .setDescription( 'Play the next song in queue' ),
-        
+        .setName( 'reset' )
+        .setDescription( 'Reset the queue' ),
+
     async execute( interaction )
     {
         await interaction.deferReply( );
@@ -31,23 +30,11 @@ module.exports =
 
         const audio = new Audio( interaction.guildId );
 
-        if ( !audio.playlist[ 1 ] )
+        audio.once( 'reset', ( ) =>
         {
-            interaction.editReply( "✅\nAll songs in the queue have been played" );
-            audio.reset( );
-
-            return;
-        }
-
-        audio.once( 'play', ( ) =>
-        {
-            const embed = new Embed( ).songPlay( audio.playlist.at( 0 ) );
-
-            interaction.editReply( { content : '✅', embeds : [ embed ] } );
-
-            return;
+            interaction.editReply( 'Queue has been reset' );
         } );
 
-        audio.skip( );
+        audio.reset( );
     }
 };

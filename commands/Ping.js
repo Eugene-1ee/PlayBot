@@ -1,21 +1,20 @@
-const { SlashCommandBuilder } = require( '@discordjs/builders' );
-const wait = require( 'util' ).promisify( setTimeout );
-const Discord = require( 'discord.js' );
+const { SlashCommandBuilder, EmbedBuilder } = require( 'discord.js' );
 
-module.exports = {
-	data : new SlashCommandBuilder()
-		.setName( 'ping' )
-		.setDescription( '딜레이를 알려줍니다' ),
-    
-    async execute( interaction, client )
+module.exports =
+{
+    data : new SlashCommandBuilder( )
+        .setName( 'ping' )
+        .setDescription( 'Check the ping of the bot' ),
+        
+    async execute( interaction )
     {
         const timeTaken = Date.now() - interaction.createdTimestamp;
 
-        const Embed = new Discord.MessageEmbed()
+        const Embed = new EmbedBuilder()
         .setColor( '#4432a8' )
-        .setTitle( '핑!' )
-        .setDescription( `${timeTaken}ms`)
+        .setTitle( 'Pong!' )
+        .setDescription( `${timeTaken}ms`);
         
-        await interaction.reply( { embeds: [Embed] } );
+        await interaction.reply( { embeds: [ Embed ] } );
     }
 };

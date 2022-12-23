@@ -1,3 +1,14 @@
-# play bot - v1.2
+# play bot - v1.3
 
-서버농장의 봇 재생이의 소스입니다.
+This is the source code of PlayBot-v1.3.
+
+[ temp ] folder is required.
+
+How to create [ config.json ]:
+{
+    {
+    "clientId" : bot_Id, 
+    "guildId" : Guild_Id,
+    "token" : bot_token,
+    "youtubeApiKey" : Youtube_Data_API_v3_Key
+}

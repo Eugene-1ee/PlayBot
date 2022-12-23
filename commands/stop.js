@@ -1,18 +1,17 @@
 const { SlashCommandBuilder } = require( 'discord.js' );
 const { getVoiceConnection } = require( '@discordjs/voice' );
 const Audio = require( '../modules/audio' );
-const Embed = require( '../modules/embed' );
 
 module.exports =
 {
     data : new SlashCommandBuilder( )
-        .setName( 'skip' )
-        .setDescription( 'Play the next song in queue' ),
+        .setName( 'stop' )
+        .setDescription( 'Stop playing music' ),
         
     async execute( interaction )
     {
         await interaction.deferReply( );
-
+        
         if ( !getVoiceConnection( interaction.guildId ) )
         {
             interaction.editReply( 'Bot is not connecting to voice channel' );
@@ -31,23 +30,11 @@ module.exports =
 
         const audio = new Audio( interaction.guildId );
 
-        if ( !audio.playlist[ 1 ] )
+        audio.once( 'stop', ( ) =>
         {
-            interaction.editReply( "✅\nAll songs in the queue have been played" );
-            audio.reset( );
-
-            return;
-        }
-
-        audio.once( 'play', ( ) =>
-        {
-            const embed = new Embed( ).songPlay( audio.playlist.at( 0 ) );
-
-            interaction.editReply( { content : '✅', embeds : [ embed ] } );
-
-            return;
+            interaction.editReply( 'The music has stopped' );
         } );
 
-        audio.skip( );
+        audio.stop( );
     }
 };
