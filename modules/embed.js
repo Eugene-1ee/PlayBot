@@ -39,39 +39,38 @@ class Embed
         return embed;
     }
 
-    playlist( queue, time )
+    playlist( queue, time, page )
     {
         const currentSong = queue[ 0 ];
-        const currentTime = timeConvert( queue[0].lengthSeconds - time );
-
-        let queueString = '';
-        for ( let i = 1; queue[ i ]; i++ )
-        {
-            queueString += `\`${ i }\` [${ queue[ i ].title }](${ queue[ i ].video_url }) ${ timeConvert( queue[ i ].lengthSeconds ) } \n`;
-            if ( queueString.length > 3600 )
-            {
-                queueString += `**and ${ queue.length - i - 1 } songs**`
-                break;
-            }
-        }
+        const currentTime = timeConvert( Number( currentSong.lengthSeconds ) - time );
         
-        if ( !queueString ) //When there are no songs in the queue:
+        if ( queue.length == 1 ) //When there are no songs in the queue:
         {
             const embed = new EmbedBuilder( )
-            .setTitle( `Music Queue` )
+            .setTitle( `Music Queue (0 tracks)` )
             .setDescription( `**Now Playing**\n[${currentSong.title}](${currentSong.video_url}) ${currentTime} left` )
             .setThumbnail( currentSong.thumbnails.at( -1 ).url )
             .setColor( '#9080a1' );
 
             return embed;
         }
-        else if ( queueString ) //When there are songs in the queue:
+        else
         {
+            const newQueue = queue.slice( 1, queue.length );
+
+            const totalPages = Math.ceil( newQueue.length / 10 ) || 1;
+
+            const queueString = newQueue.slice( page * 10, page * 10 + 10 ).map( ( song, i ) => 
+            {
+                return `\`${ page * 10 + i + 1 }\` [${song.title}](${song.video_url}) ${timeConvert( song.lengthSeconds )}`;
+            } ).join( "\n" );
+
             const embed = new EmbedBuilder( )
             .setTitle( `Music Queue (${queue.length - 1} tracks)` )
             .setDescription( `**Now Playing**\n[${currentSong.title}](${currentSong.video_url}) ${currentTime} left\n\n${queueString}` )
             .setThumbnail( currentSong.thumbnails.at( -1 ).url )
-            .setColor( '#9080a1' );
+            .setColor( '#9080a1' )
+            .setFooter( { text: `Page ${page + 1}/${totalPages}` } );;
 
             return embed;
         }
