@@ -6,7 +6,7 @@ module.exports =
 {
     data : new SlashCommandBuilder( )
         .setName( 'join' )
-        .setDescription( 'Connect to the voice channel' ),
+        .setDescription( '음성채널에 참여합니다' ),
         
     async execute( interaction )
     {

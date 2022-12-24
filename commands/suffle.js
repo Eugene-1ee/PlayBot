@@ -6,7 +6,7 @@ module.exports =
 {
     data : new SlashCommandBuilder( )
         .setName( 'shuffle' )
-        .setDescription( 'Shuffle the playlist' ),
+        .setDescription( '대기열을 섞습니다' ),
         
     async execute( interaction )
     {

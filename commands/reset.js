@@ -6,7 +6,7 @@ module.exports =
 {
     data : new SlashCommandBuilder( )
         .setName( 'reset' )
-        .setDescription( 'Reset the queue' ),
+        .setDescription( '대기열을 비웁니다' ),
 
     async execute( interaction )
     {

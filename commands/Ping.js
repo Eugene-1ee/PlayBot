@@ -4,7 +4,7 @@ module.exports =
 {
     data : new SlashCommandBuilder( )
         .setName( 'ping' )
-        .setDescription( 'Check the ping of the bot' ),
+        .setDescription( '딜레이를 확인합니다' ),
         
     async execute( interaction )
     {

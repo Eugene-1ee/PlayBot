@@ -6,7 +6,7 @@ module.exports =
 {
     data : new SlashCommandBuilder( )
         .setName( 'np' )
-        .setDescription( 'Displays information about the music currently being played' ),
+        .setDescription( '현재 재생중인 노래에 대한 정보를 표시합니다' ),
 
     async execute( interaction )
     {

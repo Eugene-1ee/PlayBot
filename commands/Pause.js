@@ -6,7 +6,7 @@ module.exports =
 {
     data : new SlashCommandBuilder( )
         .setName( 'pause' )
-        .setDescription( 'Pause the music' ),
+        .setDescription( '노래를 일시정지합니다' ),
         
     async execute( interaction )
     {

@@ -7,7 +7,7 @@ module.exports =
 {
     data : new SlashCommandBuilder( )
         .setName( 'skip' )
-        .setDescription( 'Play the next song in queue' ),
+        .setDescription( '대기열의 다음 노래를 재생합니다' ),
         
     async execute( interaction )
     {
@@ -31,6 +31,15 @@ module.exports =
 
         const audio = new Audio( interaction.guildId );
 
+        audio.once( 'play', ( ) =>
+        {
+            const embed = new Embed( ).songPlay( audio.playlist.at( 0 ) );
+
+            interaction.editReply( { content : '✅ Skip success!', embeds : [ embed ] } );
+
+            return;
+        } );
+
         if ( !audio.playlist[ 1 ] )
         {
             interaction.editReply( "✅\nAll songs in the queue have been played" );
@@ -38,16 +47,9 @@ module.exports =
 
             return;
         }
-
-        audio.once( 'play', ( ) =>
+        else
         {
-            const embed = new Embed( ).songPlay( audio.playlist.at( 0 ) );
-
-            interaction.editReply( { content : '✅', embeds : [ embed ] } );
-
-            return;
-        } );
-
-        audio.skip( );
+            audio.skip( );
+        }
     }
 };

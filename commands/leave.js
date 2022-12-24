@@ -7,7 +7,7 @@ module.exports =
 {
     data : new SlashCommandBuilder( )
         .setName( 'leave' )
-        .setDescription( 'Leave the voice channel' ),
+        .setDescription( '봇을 내보냅니다' ),
         
     async execute( interaction )
     {
@@ -42,6 +42,7 @@ module.exports =
         }
 
         const Checked = fs.existsSync( `temp/${ interaction.guildId }.ogg` );
+        
         if ( Checked )
         {
             fs.unlink( `temp/${ interaction.guildId }.ogg`, err => {
