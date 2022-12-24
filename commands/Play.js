@@ -13,10 +13,10 @@ module.exports =
 {
     data : new SlashCommandBuilder( )
         .setName( 'play' )
-        .setDescription( 'Play the music' )
+        .setDescription( '노래를 재생합니다' )
         .addStringOption( option => option
             .setName( 'search' )
-            .setDescription( 'Please enter a song Name/Url' ) ),
+            .setDescription( '노래의 제목/URL 또는 재생목록의 URL을 입력해주세요' ) ),
             
     async execute( interaction )
     {
@@ -26,6 +26,7 @@ module.exports =
         const audio = new Audio( interaction.guildId );
 
         let connection = getVoiceConnection( interaction.guildId );
+        
         if ( !connection )
         {
             if ( interaction.member.voice.channelId )
@@ -56,7 +57,7 @@ module.exports =
         }
         
         audio.once( 'play', ( ) =>
-        {
+        {              
             const embed = new Embed( ).songPlay( audio.playlist[ 0 ] );
 
             interaction.editReply( { embeds : [ embed ] } );
@@ -68,7 +69,7 @@ module.exports =
         {
             if ( length > 1 )
             {
-                interaction.editReply( `${length} songs added to the queue` );
+                interaction.editReply( `${url}\n${length} songs added to the queue` );
             }
             else
             {
@@ -78,9 +79,10 @@ module.exports =
             }
         } );
 
-        audio.once( 'error', ( error ) =>
+        audio.on( 'error', ( error ) =>
         {
             console.error( `Error: ${error.message}` );
+
             if ( error.code == 'invalidurl' )
             {
                 interaction.editReply( { content: 'This URL is unknown', ephemeral : true } );
@@ -99,7 +101,11 @@ module.exports =
             }
             else if ( error.code == 'longplaylist' )
             {
-                interaction.editReply( { content: 'Playlists of more than 50 songs cannot be added to the queue!', ephemeral : true } );
+                interaction.editReply( { content: 'Playlists of more than 75 songs cannot be added to the queue!', ephemeral : true } );
+            }
+            else if ( error.code == 'errorplaylist' )
+            {
+                interaction.editReply( { content : `재생목록에 재생할 수 없는 영상이 있습니다`, ephemeral : true } );
             }
             else
             {
@@ -111,6 +117,8 @@ module.exports =
 
         if ( !audio.status.playing )
         {
+            audio.status.playing = true;
+            
             if ( !url || ytpl.validateID( url ) || ytdl.validateURL( url ) )
             {
                 audio.play( url );

@@ -13,10 +13,10 @@ module.exports =
 {
     data : new SlashCommandBuilder( )
         .setName( 'add' )
-        .setDescription( 'Add a song to queue' )
+        .setDescription( '대기열에 노래를 추가합니다' )
         .addStringOption( option => option
             .setName( 'search' )
-            .setDescription( 'Please enter a song Name/Url' )
+            .setDescription( '노래의 제목/URL 또는 재생목록의 URL을 입력해주세요' )
             .setRequired( true ) ),
 
     async execute( interaction )
@@ -29,17 +29,17 @@ module.exports =
 
         if ( !getVoiceConnection( interaction.guildId ) )
         {
-            interaction.editReply( 'Bot is not connecting to voice channel' );
+            interaction.editReply( '봇이 음성채널에 연결되어 있지 않습니다' );
             return;
         }
         else if ( !interaction.member.voice.channelId )
         {
-            interaction.editReply( 'Interactive only on the same voice channel' );
+            interaction.editReply( '같은 음성채널에서만 상호작용 가능합니다' );
             return;
         }
         else if ( getVoiceConnection( interaction.guildId ).joinConfig.channelId !== interaction.member.voice.channelId )
         {
-            interaction.editReply( 'Interactive only on the same voice channel' );
+            interaction.editReply( '같은 음성채널에서만 상호작용 가능합니다' );
             return;
         }
 
@@ -47,7 +47,7 @@ module.exports =
         {
             if ( length > 1 )
             {
-                interaction.editReply( `${length} songs added to the queue` );
+                interaction.editReply( `${url}\n${length} songs added to the queue` );
             }
             else
             {
@@ -57,9 +57,10 @@ module.exports =
             }
         } );
 
-        audio.once( 'error', ( error ) =>
+        audio.on( 'error', ( error ) =>
         {
             console.error( `Error: ${error.message}` );
+            
             if ( error.code == 'invalidurl' )
             {
                 interaction.editReply( { content: 'This URL is unknown', ephemeral : true } );
@@ -74,7 +75,11 @@ module.exports =
             }
             else if ( error.code == 'longplaylist' )
             {
-                interaction.editReply( { content: 'Playlists of more than 50 songs cannot be added to the queue', ephemeral : true } );
+                interaction.editReply( { content: 'Playlists of more than 75 songs cannot be added to the queue', ephemeral : true } );
+            }
+            else if ( error.code == 'errorplaylist' )
+            {
+                interaction.editReply( { content : `재생목록에 재생할 수 없는 영상이 있습니다`, ephemeral : true } );
             }
             else
             {
