@@ -5,15 +5,19 @@
  */
  function timeConvert( seconds )
  {
-     const hour = parseInt( seconds / 3600 ) == 0 ?
+    if ( !seconds )
+    {
+        return '[Roading]';
+    }
+    const hour = parseInt( seconds / 3600 ) == 0 ?
          '' : `${ parseInt( seconds / 3600 ) }:` ;
-     const min = parseInt( ( seconds % 3600 ) / 60 ) == 0 ?
-         '0:' : `${ parseInt( ( seconds % 3600 ) / 60 ) }:`;
-     const sec = seconds % 60 == 0 ?
-         '00' : ( seconds % 60 < 10 ? `0${ seconds % 60 }` : `${ seconds % 60 }` );
+    const min = parseInt( ( seconds % 3600 ) / 60 ) == 0 ?
+        '0:' : `${ parseInt( ( seconds % 3600 ) / 60 ) }:`;
+    const sec = seconds % 60 == 0 ?
+        '00' : ( seconds % 60 < 10 ? `0${ seconds % 60 }` : `${ seconds % 60 }` );
      
-     const time = hour + min + sec;
-     return time;
+    const time = hour + min + sec;
+    return time;
  };
  
  module.exports = timeConvert;
