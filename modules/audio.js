@@ -84,24 +84,29 @@ class Audio extends EventEmitter
 
         const download = ytdl( this.playlist[ 0 ].video_url, { filter : format => format.container === 'mp4', quality : 'highestaudio' } );
 
-        new FfmpegCommand( download )
+        const ffmpeg = new FfmpegCommand( download )
         .noVideo( )
         .audioCodec( 'libopus' )
         .audioFilters( 'volume=0.5' )
-        .format( 'ogg' )
-        .pipe(
-            fs.createWriteStream( join( __dirname, `../temp/${ this.id }.ogg` ) )
-            .on( 'finish', ( ) =>
-            {
-                const stream = fs.createReadStream( join( __dirname, `../temp/${ this.id }.ogg` ) );
-                const resource = createAudioResource( stream, { inputType : StreamType.OggOpus } );
-                this.player.play( resource );
+        .format( 'ogg' );
 
-                this.status.playing = true;
+        ffmpeg.on( 'error', ( error ) =>
+        {
+            console.log( `Ffmpeg Error: ${ error.message }` );
+        } );
 
-                this.emit( 'play' );
-                return;
-            } ) );
+        ffmpeg.pipe( fs.createWriteStream( join( __dirname, `../temp/${ this.id }.ogg` ) )
+        .on( 'finish', ( ) =>
+        {
+            const stream = fs.createReadStream( join( __dirname, `../temp/${ this.id }.ogg` ) );
+            const resource = createAudioResource( stream, { inputType : StreamType.OggOpus } );
+            this.player.play( resource );
+
+            this.status.playing = true;
+
+            this.emit( 'play' );
+            return;
+        } ) );
     }
 
     _getNextResource( )
@@ -125,55 +130,63 @@ class Audio extends EventEmitter
             if ( ytpl.validateID( url ) )
             {
                 ytpl( url, { limit : 10000, hl : 'ko' } )
-                    .then( ( playlistInfo ) =>
-                    {
-                        const list = [ ];
+                .then( ( playlistInfo ) =>
+                {
+                    const list = [ ];
 
-                        if ( playlistInfo.items.length > 50 )
-                        {
-                            const error = new Error( );
-                            error.message = `${ url } 재생목록이 너무 깁니다.`;
-                            error.code = 'longplaylist';
-                            this.emit( 'error', error );
-                            return;
-                        }
-                    
-                        for( const i in playlistInfo.items )
-                        {
-                            ytdl.getBasicInfo( playlistInfo.items[ i ].shortUrl, { lang : 'ko' } )
-                                .then( ( videoInfo ) =>
-                                {
-                                    list[ i ] = videoInfo.videoDetails;
-                                    
-                                    for( let j = 0; list[ j ] !== undefined; j++ )
-                                    {
-                                        if ( j == playlistInfo.items.length - 1 )
-                                        {
-                                            this.playlist.push( ...list );
-                                        
-                                            this.emit( 'add', playlistInfo.items.length );
-                                        
-                                            this._play( );
-                                        }
-                                    }
-                                } );
-                        }
-                    } )
-                    .catch( ( ) =>
+                    if ( playlistInfo.items.length > 75 )
                     {
                         const error = new Error( );
-                        error.message = `${ url } 에서 재생목록 정보를 찾을 수 없습니다.`;
-                        error.code = 'unknownplaylist';
+                        error.message = `${ url } 재생목록이 너무 깁니다.`;
+                        error.code = 'longplaylist';
                         this.emit( 'error', error );
-                    } );
+                        return;
+                    }
+                    
+                    for( const i in playlistInfo.items )
+                    {
+                        ytdl.getBasicInfo( playlistInfo.items[ i ].shortUrl, { lang : 'ko' } )
+                        .then( ( videoInfo ) =>
+                        {
+                            list[ i ] = videoInfo.videoDetails;
+                                
+                            for( let j = 0; list[ j ] !== undefined; j++ )
+                            {
+                                if ( j == playlistInfo.items.length - 1 )
+                                {
+                                    this.playlist.unshift( ...list );
+                                        
+                                    this.emit( 'add', playlistInfo.items.length );
+                                        
+                                    this._play( );
+                                }
+                            }
+                        } )
+                        .catch( ( ) =>
+                        {
+                            const error = new Error( );
+                            error.message = `${ url } 의 재생목록 중 일부 비디오 정보를 찾을 수 없습니다.`;
+                            error.code = 'errorplaylist';
+                            this.emit( 'error', error );
+                        } );
+                    }
+                } )
+                .catch( ( ) =>
+                {
+                    const error = new Error( );
+                    error.message = `${ url } 에서 재생목록 정보를 찾을 수 없습니다.`;
+                    error.code = 'unknownplaylist';
+                    this.emit( 'error', error );
+                } );
             }
             else if ( ytdl.validateURL( url ) )
             {
-                ytdl.getBasicInfo( url, { lang : 'ko' } ).then( ( videoInfo ) =>
+                ytdl.getBasicInfo( url, { lang : 'ko' } )
+                .then( ( videoInfo ) =>
                 {
                     this.playlist.push( videoInfo.videoDetails );
 
-                    this.emit( 'add', 1 );
+                    this.emit( 'play' );
 
                     this._play( );
                 } )
@@ -204,11 +217,11 @@ class Audio extends EventEmitter
     {
         if ( ytpl.validateID( url ) )
         {
-            ytpl( url, { limit : 10000, hl : 'ko' } ).then( ( playlistInfo ) =>
-            {
+            ytpl( url, { limit : 10000, hl : 'ko' } )
+            .then( ( playlistInfo ) => {
                 const list = [ ];
 
-                if ( playlistInfo.items.length > 50 )
+                if ( playlistInfo.items.length > 75 )
                 {
                     const error = new Error( );
                     error.message = `${ url } 재생목록이 너무 깁니다.`;
@@ -219,10 +232,11 @@ class Audio extends EventEmitter
 
                 for( const i in playlistInfo.items )
                 {
-                    ytdl.getBasicInfo( playlistInfo.items[ i ].shortUrl ).then( ( videoInfo ) =>
+                    ytdl.getBasicInfo( playlistInfo.items[ i ].shortUrl )
+                    .then( ( videoInfo ) =>
                     {
                         list[ i ] = videoInfo.videoDetails;
-                            
+                                
                         for( let j = 0; list[ j ]; j++ )
                         {
                             if ( j == playlistInfo.items.length - 1 )
@@ -232,6 +246,13 @@ class Audio extends EventEmitter
                                 this.emit( 'add', playlistInfo.items.length );
                             }
                         }
+                    } )
+                    .catch( ( ) =>
+                    {
+                        const error = new Error( );
+                        error.message = `${ url } 의 재생목록 중 일부 비디오 정보를 찾을 수 없습니다.`;
+                        error.code = 'errorplaylist';
+                        this.emit( 'error', error );
                     } );
                 }
             } )                
@@ -298,6 +319,7 @@ class Audio extends EventEmitter
 
     skip( )
     {
+        this.stop( );
         this._getNextResource( );
         this.emit( 'skip' );
     }
