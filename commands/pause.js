@@ -5,8 +5,8 @@ const Audio = require( '../modules/audio' );
 module.exports =
 {
     data : new SlashCommandBuilder( )
-        .setName( 'resume' )
-        .setDescription( '노래를 재개합니다' ),
+        .setName( 'pause' )
+        .setDescription( '노래를 일시정지합니다' ),
         
     async execute( interaction )
     {
@@ -14,7 +14,7 @@ module.exports =
 
         if ( !getVoiceConnection( interaction.guildId ) )
         {
-            interaction.editReply( 'Bot is not connecting to voice channel.' );
+            interaction.editReply( 'Bot is not connecting to voice channel' );
             return;
         }
         else if ( !interaction.member.voice.channelId )
@@ -30,16 +30,16 @@ module.exports =
 
         const audio = new Audio( interaction.guildId );
 
-        audio.once( 'resume', ( ) =>
+        audio.once( 'pause', ( ) =>
         {
-            interaction.editReply( 'The music has resumed' );
+            interaction.editReply( 'The music has been paused' );
         } );
 
-        audio.once( 'cannotresume', ( ) =>
+        audio.once( 'cannotpause', ( ) =>
         {
-            interaction.editReply( { content : 'The music is already playing.', ephemeral : true } );
+            interaction.editReply( { content : 'The music has already been paused', ephemeral : true } );
         } );
 
-        audio.resume( );
+        audio.pause( );
     }
 };
