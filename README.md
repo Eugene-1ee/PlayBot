@@ -1,14 +1,9 @@
-# play bot - v1.3
+# Play bot - v1.5
 
-This is the source code of PlayBot-v1.3.
+서버농장의 봇 재생이의 소스입니다.
 
-[ temp ] folder is required.
+Made by Eugene
 
-How to create [ config.json ]:
-{
-    {
-    "clientId" : bot_Id, 
-    "guildId" : Guild_Id,
-    "token" : bot_token,
-    "youtubeApiKey" : Youtube_Data_API_v3_Key
-}
+도커에 빌드할 때 node_modules 폴더를 지우고 빌드할 것!
+
+node --no-warnings .
