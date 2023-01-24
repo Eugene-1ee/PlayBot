@@ -1,10 +1,10 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require( 'discord.js' );
 const fs = require( 'fs' );
 const randomNum = require( "../modules/randNum" );
-const gameEmbed = require( "../modules/gameEmbed" );
+const hlEmbed = require( "../modules/hlEmbed" );
 
 module.exports = {
-	data : [ '게임', 'ㄱㅇ', 'rd' ],
+	data : [ '게임1' ],
 	async execute( message )
 	{
         const Url = `assets/temp/${ message.author.id }.json`;
@@ -75,7 +75,7 @@ module.exports = {
                 .setStyle( ButtonStyle.Secondary ) );
 
             const point = -2, combo = 0;
-            const Embed = gameEmbed( message, point, combo );
+            const Embed = hlEmbed( message, point, combo );
 
             const msg = await message.reply( { embeds : [ Embed ] , components : [ row, Row ] } );
 
@@ -281,7 +281,7 @@ module.exports = {
                         const data = JSON.stringify( parsedData, null, "\t" );
 		    	    	fs.writeFileSync( Url, data );
 
-                        const Embed = gameEmbed( message, point, combo );
+                        const Embed = hlEmbed( message, point, combo );
 
                         msg.edit( { embeds : [ Embed ] , components : [ row ] } );
                     } 

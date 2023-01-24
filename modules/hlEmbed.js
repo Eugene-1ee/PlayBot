@@ -1,9 +1,8 @@
 const fs = require( 'fs' );
 const { EmbedBuilder } = require( 'discord.js' );
-const numToKo = require( './numConvert' );
 
 /** HighLow 게임 임베드 함수 */
-function gameEmbed( message, point, combo )
+function hlEmbed( message, point, combo )
 {
     const Url = `assets/temp/${ message.author.id }.json`;
     const parsedData = JSON.parse( fs.readFileSync( Url ) );
@@ -70,4 +69,4 @@ function gameEmbed( message, point, combo )
     return Embed;
 };
 
-module.exports = gameEmbed;
+module.exports = hlEmbed;
