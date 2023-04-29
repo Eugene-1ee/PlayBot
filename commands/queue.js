@@ -1,25 +1,25 @@
-const { EmbedBuilder, SlashCommandBuilder, ButtonStyle, ButtonBuilder, ActionRowBuilder } = require( "discord.js" );
-const { getVoiceConnection } = require( "@discordjs/voice" );
-const { erremb, queue } = require( "../util/embed.js" );
-const { Buttonpage2, pagemore } = require( "../util/button.js" )
+const { EmbedBuilder, SlashCommandBuilder, ButtonStyle, ButtonBuilder, ActionRowBuilder } = require( 'discord.js' );
+const { getVoiceConnection } = require( '@discordjs/voice' );
 
-let { connection, player, playlist, resource, volume, station } = require( "../functions/val.js" );
+const { erremb, queue } = require( '../util/embed.js' );
+const { Buttonpage2, pagemore } = require( '../util/button.js' )
+
+let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
 
 module.exports = {
 	data: new SlashCommandBuilder( )
-		.setName( "대기열" )
-		.setDescription( "재생 목록과 트랙 번호를 볼 수 있아요." ),
+		.setName( '대기열' )
+		.setDescription( '재생 목록과 트랙 번호를 볼 수 있아요.' ),
     
 	async execute( interaction )
     {
-        if ( !connection[ interaction.guild.id ] || getVoiceConnection( interaction.guild.id )._state.status !== "ready" )
+        if ( !connection[ interaction.guild.id ] || getVoiceConnection( interaction.guild.id )._state.status !== 'ready' )
         {
-            return erremb( interaction, ":triangular_flag_on_post:  **|**  재생 목록을 찾지 못했어요." );
+            return interaction.reply( { embeds : [ erremb( ':triangular_flag_on_post:  **|**  재생 목록을 없어요.' ) ] } );
         }
-
-        if ( !playlist[ interaction.guild.id ] )
+        else if ( !playlist[ interaction.guild.id ] )
         {
-            return erremb( interaction, ":triangular_flag_on_post:  **|**  재생 목록이 없어요." );
+            return interaction.reply( { embeds : [ erremb( ':triangular_flag_on_post:  **|**  재생 목록이 없어요.' ) ] } );
         }
 
 

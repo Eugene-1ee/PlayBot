@@ -29,8 +29,8 @@ module.exports =
             console.error( error );
 
             const Embed = new EmbedBuilder( )
-                // .setColor( "#0x7d3640" )
-                .setTitle( "에러 발생!" );
+                // .setColor( '#0x7d3640' )
+                .setTitle( '에러 발생!' );
 
             return interaction.reply( { embeds: [ Embed ], ephemeral : true } );
         }

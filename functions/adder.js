@@ -1,24 +1,23 @@
-const { EmbedBuilder } = require( "discord.js" );
-const { joinVoiceChannel, VoiceConnectionStatus, getVoiceConnection } = require( "@discordjs/voice" );
+const { EmbedBuilder } = require( 'discord.js' );
+const { joinVoiceChannel, VoiceConnectionStatus, getVoiceConnection } = require( '@discordjs/voice' );
 
-const { erremb } = require( "../util/embed.js" );
+const { erremb } = require( '../util/embed.js' );
+const { cleanup } = require( '../functions/cleanup.js' );
+const { handler } = require( '../functions/handler.js' );
 
-const { cleanup } = require( "../functions/cleanup.js" );
-const { handler } = require( "../functions/handler.js" );
-
-let { connection, player, playlist, resource, volume, station } = require( "../functions/val.js" );
+let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
 
 async function adder( interaction, title, id, length, isList )
 {
     //Connection
     if ( !isList )
     {
-        console.log( "Channel:" + getVoiceConnection( interaction.guild.id ) );
+        console.log( 'Channel:' + getVoiceConnection( interaction.guild.id ) );
     }
 
     if ( !connection[ interaction.guild.id ]
-        || await getVoiceConnection( interaction.guild.id )._state.status !== "ready"
-        && await getVoiceConnection( interaction.guild.id )._state.status !== "signalling" )
+        || await getVoiceConnection( interaction.guild.id )._state.status !== 'ready'
+        && await getVoiceConnection( interaction.guild.id )._state.status !== 'signalling' )
     {
         cleanup( interaction.guild.id );
         connection[ interaction.guild.id ] = joinVoiceChannel(
@@ -31,7 +30,7 @@ async function adder( interaction, title, id, length, isList )
     //Connection
 
     //Add Song
-    let temp_index = "";
+    let temp_index = '';
 
     if ( !playlist[ interaction.guild.id ] )
     {
@@ -44,12 +43,12 @@ async function adder( interaction, title, id, length, isList )
     }
 
     let song = new Map();
-    song[ "title" ] = title;
-    song[ "id" ] = id;
-    song[ "length" ] = length;
+    song[ 'title' ] = title;
+    song[ 'id' ] = id;
+    song[ 'length' ] = length;
 
     playlist[ interaction.guild.id ][ temp_index ] = song;
-    playlist[ interaction.guild.id ][ temp_index ][ "user" ] = interaction.user;
+    playlist[ interaction.guild.id ][ temp_index ][ 'user' ] = interaction.user;
     //Add Song
 
     if ( resource[ interaction.guild.id ] )
@@ -60,10 +59,10 @@ async function adder( interaction, title, id, length, isList )
         }
 
         const adderemb = new EmbedBuilder( )
-        // .setColor("#0x7d3640")
-            .setTitle( ":white_check_mark:  **|**  재생목록에 추가했습니다!" )
+        // .setColor('#0x7d3640')
+            .setTitle( ':white_check_mark:  **|**  재생목록에 추가했습니다!' )
             .setDescription( title )
-            .setThumbnail( "https://img.youtube.com/vi/" + id + "/mqdefault.jpg" );
+            .setThumbnail( 'https://img.youtube.com/vi/' + id + '/mqdefault.jpg' );
         
         return interaction.channel.send( { embeds: [ adderemb ] } );
     }

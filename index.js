@@ -62,23 +62,23 @@ for ( const file of eventFiles )
     }
 };
 
-// // Processing Errors
-// client.on( Events.ShardError, error => {
-// 	console.error( 'A websocket connection encountered an error:', error );
-// });
+// Processing Errors
+client.on( Events.ShardError, error => {
+	console.error( 'A websocket connection encountered an error:', error );
+});
 
-// process.on( "unhandledRejection", async ( err ) => {
-//     //console.error( "Unhandled Promise Rejection:\n", err );
-// });
-// process.on( "uncaughtException", async ( err ) => {
-//     //console.error( "Uncaught Promise Exception:\n", err );
-// });
-// process.on( "uncaughtExceptionMonitor", async ( err ) => {
-//     //console.error( "Uncaught Promise Exception (Monitor):\n", err );
-// });
-// process.on( "multipleResolves", async ( type, promise, reason ) => {
-//     // console.error( "Multiple Resolves:\n", type, promise, reason );
-// });
+process.on( "unhandledRejection", async ( err ) => {
+    //console.error( "Unhandled Promise Rejection:\n", err );
+});
+process.on( "uncaughtException", async ( err ) => {
+    //console.error( "Uncaught Promise Exception:\n", err );
+});
+process.on( "uncaughtExceptionMonitor", async ( err ) => {
+    //console.error( "Uncaught Promise Exception (Monitor):\n", err );
+});
+process.on( "multipleResolves", async ( type, promise, reason ) => {
+    // console.error( "Multiple Resolves:\n", type, promise, reason );
+});
 
 // Log in to Discord with your client's token
 client.login( process.env.TOKEN );

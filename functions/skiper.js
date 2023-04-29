@@ -1,6 +1,6 @@
-const { cleanup } = require( "../functions/cleanup.js" );
+const { cleanup } = require( '../functions/cleanup.js' );
 
-let { connection, player, playlist, resource, volume, station } = require( "../functions/val.js" );
+let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
 
 function skiper( interaction, track, callback )
 {
@@ -28,7 +28,7 @@ function skiper( interaction, track, callback )
         player[ interaction.guild.id ].stop( );
 
         //?
-        const { handler } = require( "../functions/handler.js" );
+        const { handler } = require( '../functions/handler.js' );
         
         handler( interaction, interaction.guild.id );
     }

@@ -1,22 +1,20 @@
-const { EmbedBuilder } = require( "discord.js" );
-const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus, VoiceConnectionStatus, getVoiceConnection } = require( "@discordjs/voice" );
-const timeConvert = require( "../util/timeConvert.js" );
+const { EmbedBuilder } = require( 'discord.js' );
+const { joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus, VoiceConnectionStatus, getVoiceConnection } = require( '@discordjs/voice' );
+const ytdl = require( 'ytdl-core' );
 
-const ytdl = require( "ytdl-core" );
+const timeConvert = require( '../util/timeConvert.js' );
+const { erremb } = require( '../util/embed.js' );
+const { cleanup } = require( '../functions/cleanup.js' );
+const { skiper } = require( '../functions/skiper.js' );
+const { stat_handler } = require( '../functions/stat_handler.js' );
 
-const { erremb } = require( "../util/embed.js" );
+let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
 
-const { cleanup } = require( "../functions/cleanup.js" );
-const { skiper } = require( "../functions/skiper.js" );
-const { stat_handler } = require( "../functions/stat_handler.js" );
-
-let { connection, player, playlist, resource, volume, station } = require( "../functions/val.js" );
-
-require( "dotenv" ).config( );
+require( 'dotenv' ).config( );
 
 async function play( interaction, title, id, length, user )
 {
-    let url = "https://youtu.be/" + id;
+    let url = 'https://youtu.be/' + id;
 
     player[ interaction.guild.id ] = createAudioPlayer( );
     connection[ interaction.guild.id ].subscribe( player[ interaction.guild.id ] );
@@ -26,12 +24,12 @@ async function play( interaction, title, id, length, user )
         volume[ interaction.guild.id ] = 1;
     }
 
-    if ( getVoiceConnection( interaction.guild.id )._state.status !== "ready" || !connection[ interaction.guild.id ] )
+    if ( getVoiceConnection( interaction.guild.id )._state.status !== 'ready' || !connection[ interaction.guild.id ] )
     {
         return cleanup( interaction.guild.id );
     }
 
-    resource[ interaction.guild.id ] = createAudioResource( ytdl( url, { filter : "audioonly", quality: "highestaudio", highWaterMark: 1 << 25 } ), { inlineVolume: true } );
+    resource[ interaction.guild.id ] = createAudioResource( ytdl( url, { filter : 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25 } ), { inlineVolume: true } );
  
     resource[ interaction.guild.id ].volume.setVolume( volume[ interaction.guild.id ] );
 
@@ -39,9 +37,9 @@ async function play( interaction, title, id, length, user )
 
     player[ interaction.guild.id ].once( AudioPlayerStatus.Idle, async ( ) =>
     {
-        if ( station[interaction.guild.id] === "repeat" )
+        if ( station[interaction.guild.id] === 'repeat' )
         {
-            const { adder } = require( "../functions/adder.js" );
+            const { adder } = require( '../functions/adder.js' );
 
             await adder( interaction, title, id, length, user, true );
             return skiper( interaction, 0, ( ) => { } );
@@ -55,24 +53,24 @@ async function play( interaction, title, id, length, user )
         return skiper( interaction, 0, ( ) => { } );
     } );
 
-    if ( station[ interaction.guild.id ] === "repeat" )
+    if ( station[ interaction.guild.id ] === 'repeat' )
     {
         return;
     }
     
     let playemb = new EmbedBuilder( )
-    // .setColor("#0x7d3640")
-        .setThumbnail( "https://img.youtube.com/vi/" + id + "/mqdefault.jpg" )
+    // .setColor('#0x7d3640')
+        .setThumbnail( 'https://img.youtube.com/vi/' + id + '/mqdefault.jpg' )
         .setDescription( `[${title}](https://www.youtube.com/watch?v=${id}) \`\`${timeConvert(length)}\`\`` )
         .setFooter( { text: `Added by ${user.username}#${user.discriminator}` } );;
 
     if ( !station[ interaction.guild.id ] )
     {
-        playemb.setTitle( ":notes: Now Playing" );
+        playemb.setTitle( ':notes: Now Playing' );
     }
     else
     {
-        playemb.setTitle( ":fire: Now Playing" );
+        playemb.setTitle( ':fire: Now Playing' );
     }
 
     return interaction.channel.send( { embeds: [ playemb ] } );

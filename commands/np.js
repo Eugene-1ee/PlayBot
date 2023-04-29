@@ -1,8 +1,9 @@
 const { EmbedBuilder, SlashCommandBuilder } = require( 'discord.js' );
-const timeConvert = require( '../util/timeConvert' );
 
-let { connection, player, playlist, resource, volume, station } = require( "../functions/val.js" );
+const timeConvert = require( '../util/timeConvert' );
 const { erremb } = require( '../util/embed' );
+
+let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
 
 module.exports =
 {
@@ -12,11 +13,10 @@ module.exports =
 
     async execute( interaction )
     {
-        console.log( "a" )
-        console.log( "a",  playlist[ interaction.guild.id ] )
         if ( !playlist[ interaction.guild.id ] )
         {
-            return erremb( interaction, ":triangular_flag_on_post:  **|**  재생 목록을 찾지 못했습니다!", "이것 참 심오하군요..." );
+            interaction.reply( { embeds : [ erremb( ':triangular_flag_on_post:  **|**  재생 목록이 없습니다.') ] } );
+            return;
         }
 
         const currentSong = playlist[ interaction.guild.id ][ 0 ];
@@ -29,12 +29,12 @@ module.exports =
 
         const embed = new EmbedBuilder()
             .setTitle( `Now Playing` )
-            .setThumbnail( `https://img.youtube.com/vi/${currentSong.id}"/mqdefault.jpg` )
+            .setThumbnail( `https://img.youtube.com/vi/${currentSong.id}/mqdefault.jpg` )
             .setDescription( `[${currentSong.title}](https://www.youtube.com/watch?v=${currentSong.id})\n\n${playtime}  ` + bar + `  ${time}` )
             .setColor( '#9080a1' )
             .setAuthor(
                 {
-                    name : currentSong[ "user" ].username + "#" + currentSong[ "user" ].discriminator
+                    name : currentSong[ 'user' ].username + '#' + currentSong[ 'user' ].discriminator
                 } );
 
         await interaction.reply( { embeds : [ embed ] } );

@@ -1,7 +1,7 @@
-const { cleanup } = require( "../functions/cleanup.js" );
-const { play } = require( "../functions/play.js" );
+const { cleanup } = require( '../functions/cleanup.js' );
+const { play } = require( '../functions/play.js' );
 
-let { connection, player, playlist, resource, volume, station } = require( "../functions/val.js" );
+let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
 
 function handler( interaction, guildId )
 {

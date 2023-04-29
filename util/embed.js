@@ -1,25 +1,24 @@
-const { EmbedBuilder } = require( "discord.js" );
+const { EmbedBuilder } = require( 'discord.js' );
 const timeConvert = require( './timeConvert' );
-let { connection, player, playlist, resource, volume, station } = require( "../functions/val.js" );
+let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
 
-function erremb( interaction, title, sub )
+function erremb( message )
 {
     const errembed = new EmbedBuilder( )
-    // .setColor("#0x7d3640")
-        .setTitle( title )
-        .setDescription( sub );
+    // .setColor('#0x7d3640')
+        .setTitle( message );
 
-    return interaction.reply( { embeds: [ errembed ] } );
+    return errembed;
 }
 
-function norpembed( interaction, title, sub )
+function norpembed( title, sub )
 {
-    const errembed = new EmbedBuilder( )
-    // .setColor("#0x7d3640")
+    const norpbed = new EmbedBuilder( )
+    // .setColor('#0x7d3640')
         .setTitle( title )
         .setDescription( sub );
 
-    return interaction.channel.send( { embeds: [ errembed ] } );
+    return norpbed;
 };
 
 function queue( interaction, page )
@@ -31,10 +30,10 @@ function queue( interaction, page )
     {
         queue[ a ] =
         {
-            "title": `${playlist[ interaction.guild.id ][ unter ][ "title" ]}`,
-            "id": `${playlist[ interaction.guild.id ][ unter ][ "id" ]}`,
-            "length": `${playlist[ interaction.guild.id ][ unter ][ "length" ]}`,
-            "user": `${playlist[ interaction.guild.id ][ unter ][ "user" ]}`,
+            'title': `${playlist[ interaction.guild.id ][ unter ][ 'title' ]}`,
+            'id': `${playlist[ interaction.guild.id ][ unter ][ 'id' ]}`,
+            'length': `${playlist[ interaction.guild.id ][ unter ][ 'length' ]}`,
+            'user': `${playlist[ interaction.guild.id ][ unter ][ 'user' ]}`,
         };
 
         a++;
@@ -62,7 +61,7 @@ function queue( interaction, page )
         const queueString = newQueue.slice( page * 10, page * 10 + 10 ).map( ( song, i ) => 
         {
             return `\`${ page * 10 + i + 1 }\` [${song.title}](https://www.youtube.com/watch?v=${song.id}) \`\`${timeConvert( song.length )}\`\`\n-${ song.user }`;
-        } ).join( "\n" );
+        } ).join( '\n' );
 
         const embed = new EmbedBuilder( )
             .setTitle( `Music Queue (${queue.length - 1} tracks)` )
