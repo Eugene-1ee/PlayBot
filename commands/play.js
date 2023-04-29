@@ -93,8 +93,8 @@ module.exports =
                     // .setColor('#6b26ff')
                         .setTitle( ':crystal_ball:  **|**  URL을 불러오고 있어요.' );
                     
-                    interaction.reply( { embeds: [ listemb ] } );
-                    interaction.deleteReply( );
+                    await interaction.reply( { embeds: [ listemb ] } );
+                    await interaction.editReply({ content: "성공", embeds: [] } );
 
                     return val_to_dt( val, interaction );
                 }
