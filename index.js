@@ -14,13 +14,17 @@ const client = new Client(
     ]
 } );
 
-client.on( "warn", console.warn );
-client.on( "error", console.error );
-client.on( "shardDisconnect", ( event, id ) =>
+client.on( Events.Warn, console.warn );
+client.on( Events.Error, console.error );
+client.on( Events.ShardError, ( error ) => 
+    console.log( 'A websocket connection encountered an error:', error ) );
+client.on( Events.ShardDisconnect, ( event, id ) =>
     console.log( "Bot Shard " + id + " disconnected (" + event.code + ") " + event + ", trying to reconnect..." ) );
-client.on( "shardReconnecting", ( id ) =>
+client.on( Events.ShardReconnecting, ( id ) =>
     console.log( "Bot Shard " + id + " reconnecting..." ) );
-
+client.on( Events.WebhooksUpdate, ( update ) =>
+    console.log( 'Webhooks Update:\n', update ) );
+    
 client.commands = new Collection( );
 
 const commandsPath = path.join( __dirname, "commands" );
@@ -62,23 +66,18 @@ for ( const file of eventFiles )
     }
 };
 
-// Processing Errors
-client.on( Events.ShardError, error => {
-	console.error( 'A websocket connection encountered an error:', error );
-});
-
 process.on( "unhandledRejection", async ( err ) => {
-    //console.error( "Unhandled Promise Rejection:\n", err );
+    console.log( "Unhandled Promise Rejection:\n", err );
 });
 process.on( "uncaughtException", async ( err ) => {
-    //console.error( "Uncaught Promise Exception:\n", err );
+    console.log( "Uncaught Promise Exception:\n", err );
 });
 process.on( "uncaughtExceptionMonitor", async ( err ) => {
-    //console.error( "Uncaught Promise Exception (Monitor):\n", err );
+    console.log( "Uncaught Promise Exception (Monitor):\n", err );
 });
-process.on( "multipleResolves", async ( type, promise, reason ) => {
-    // console.error( "Multiple Resolves:\n", type, promise, reason );
-});
+// process.on( "multipleResolves", async ( type, promise, reason ) => {
+//     console.log( "Multiple Resolves:\n", type, promise, reason );
+// });
 
 // Log in to Discord with your client's token
 client.login( process.env.TOKEN );

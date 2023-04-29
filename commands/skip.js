@@ -5,6 +5,7 @@ const { erremb } = require( '../util/embed.js' );
 const { skiper } = require( '../functions/skiper.js' );
 
 let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
+const { songcheck } = require('../util/check.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -24,13 +25,9 @@ module.exports = {
             val = interaction.options.data[0].value;
         }
 
-        if ( !connection[interaction.guild.id] || getVoiceConnection(interaction.guild.id)._state.status !== 'ready' )
+        if ( songcheck( interaction ) )
         {
-            return interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  **|**  재생 중인 노래가 없습니다!' ) ] } );
-        }
-        else if (!playlist[interaction.guild.id])
-        {
-            return interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  **|**  재생 목록을 찾지 못했습니다!' ) ] } );
+            return interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  재생 중인 노래가 없습니다!' ) ] } );
         }
 
         val = parseInt( val );
@@ -49,7 +46,7 @@ module.exports = {
             {
                 const skiemb = new EmbedBuilder( )
                 // .setColor('#0x7d3640')
-                    .setTitle( ':track_next:  **|**  스킵되었습니다!' )
+                    .setTitle( ':track_next:  스킵되었습니다!' )
                     .setDescription( temp_tilt.title )
                     .setThumbnail( 'https://img.youtube.com/vi/' + temp_tilt.id + '/mqdefault.jpg' );
 
@@ -58,7 +55,7 @@ module.exports = {
         }
         else
         {
-            return interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  **|**  ' + (val) + '번 트랙을 찾지 못했습니다!\n재생목록 에서 트랙 번호를 다시 한번 확인 해주세요!' ) ] } );
+            return interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  ' + (val) + '번 트랙을 찾지 못했습니다!\n재생목록 에서 트랙 번호를 다시 한번 확인 해주세요!' ) ] } );
         }
     }
 }

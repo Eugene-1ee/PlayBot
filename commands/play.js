@@ -48,14 +48,14 @@ module.exports =
                 {
                     const listemb = new EmbedBuilder( )
                     // .setColor('#6b26ff')
-                        .setTitle( ':crystal_ball:  **|**  URL을 불러오고 있어요.' );
+                        .setTitle( ':crystal_ball:  URL을 불러오고 있어요.' );
 
                     try
                     {
                         let data = await ytdl.getBasicInfo( 'https://youtu.be/' + val );
 
-                        interaction.reply( { embeds: [ listemb ] } );
-                        interaction.deleteReply( );
+                        await interaction.reply( { embeds: [ listemb ] } );
+                        await interaction.editReply({ content: "성공", embeds: [] } );
 
                         return val_to_dt( val, interaction );
                     }
@@ -66,7 +66,7 @@ module.exports =
                 }
                 else
                 {
-                    return interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  **|**  URL이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
+                    return interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  URL이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
                 }
             }
             else if ( val.search('youtu.be/') > -1 )
@@ -91,7 +91,7 @@ module.exports =
 
                     const listemb = new EmbedBuilder( )
                     // .setColor('#6b26ff')
-                        .setTitle( ':crystal_ball:  **|**  URL을 불러오고 있어요.' );
+                        .setTitle( ':crystal_ball:  URL을 불러오고 있어요.' );
                     
                     await interaction.reply( { embeds: [ listemb ] } );
                     await interaction.editReply({ content: "성공", embeds: [] } );
@@ -100,7 +100,7 @@ module.exports =
                 }
                 else
                 {
-                    return interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  **|**  URL이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
+                    return interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  URL이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
                 }
             }
             //Playlist
@@ -120,7 +120,7 @@ module.exports =
                         await interaction.deferReply( );
                         if ( !list )
                         {
-                            return interaction.editReply( { embeds: [ erremb( ':triangular_flag_on_post:  **|**  URL이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
+                            return interaction.editReply( { embeds: [ erremb( ':triangular_flag_on_post:  URL이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
                         }
     
                         let res = '';
@@ -134,7 +134,7 @@ module.exports =
 
                                 if ( word <= 1500 )
                                 {
-                                    res += '**`' + orig + '`**  ' + list[unter].title + `  \`\`${timeConvert( list[unter].durationSec )}\`\`` + '\n';
+                                    res += '**`' + orig + '`**  ' + list[unter].title + `   \`\`${timeConvert( list[unter].durationSec )}\`\`` + '\n';
                                     ++orig;
                                 }
                                 else
@@ -172,13 +172,13 @@ module.exports =
                 }
                 else
                 {
-                    return interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  **|**  URL이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
+                    return interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  URL이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
                 }
             }
             //Playlist
             else
             {
-                return interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  **|**  URL 형식이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
+                return interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  URL 형식이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
             }
         }
         //URL
@@ -218,7 +218,7 @@ module.exports =
                         {
                             response.delete();
 
-                            return interaction.editReply( { embeds: [ norpembed( ':triangular_flag_on_post:  **|**  곡 선택이 취소되었습니다!', '취소를 했다!' ) ] } );
+                            return interaction.editReply( { embeds: [ norpembed( ':triangular_flag_on_post:  곡 선택이 취소되었습니다!', '잘못 검색한건감' ) ] } );
                         }
                         if ( parseInt(response.content) > 0 && parseInt(response.content) < 11 )
                         {
@@ -240,11 +240,11 @@ module.exports =
                         }
                         else
                         {
-                            return interaction.editReply( { embeds: [ norpembed( ':triangular_flag_on_post:  **|**  곡 선택이 취소되었습니다!', '올바르지 않은 수가 입력되었습니다. 1 ~ 10 안으로 선택 해주세요.' ) ] } );
+                            return interaction.editReply( { embeds: [ norpembed( ':triangular_flag_on_post:  곡 선택이 취소되었습니다!', '올바르지 않은 수가 입력되었습니다. 1 ~ 10 안으로 선택 해주세요.' ) ] } );
                         }
                     } ).catch( ( err ) =>
                     {
-                        return interaction.editReply( { embeds: [ norpembed( ':triangular_flag_on_post:  **|**  곡 선택이 취소되었습니다!', '곡을 선택하는데 너무 오랜 시간이 걸렸습니다.' ) ] } );
+                        return interaction.editReply( { embeds: [ norpembed( ':triangular_flag_on_post:  곡 선택이 취소되었습니다!', '곡을 선택하는데 너무 오랜 시간이 걸렸습니다.' ) ] } );
                     } );
                 });
 

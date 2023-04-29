@@ -57,14 +57,21 @@ async function adder( interaction, title, id, length, isList )
         {
             return;
         }
-
-        const adderemb = new EmbedBuilder( )
-        // .setColor('#0x7d3640')
-            .setTitle( ':white_check_mark:  **|**  재생목록에 추가했습니다!' )
-            .setDescription( title )
-            .setThumbnail( 'https://img.youtube.com/vi/' + id + '/mqdefault.jpg' );
         
-        return interaction.channel.send( { embeds: [ adderemb ] } );
+        if ( !station[ interaction.guild.id ] )
+        {
+            const adderemb = new EmbedBuilder( )
+            // .setColor('#0x7d3640')
+                .setTitle( ':white_check_mark:  **|**  재생목록에 추가했습니다!' )
+                .setDescription( title )
+                .setThumbnail( 'https://img.youtube.com/vi/' + id + '/mqdefault.jpg' );
+            
+            return interaction.channel.send( { embeds: [ adderemb ] } );
+        }
+        else
+        {
+            return;
+        }
     }
     else
     {

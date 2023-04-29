@@ -2,6 +2,7 @@ const { EmbedBuilder, SlashCommandBuilder } = require( 'discord.js' );
 
 const timeConvert = require( '../util/timeConvert' );
 const { erremb } = require( '../util/embed' );
+const { musiccheck } = require('../util/check');
 
 let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
 
@@ -13,9 +14,9 @@ module.exports =
 
     async execute( interaction )
     {
-        if ( !playlist[ interaction.guild.id ] )
+        if ( musiccheck( interaction ) )
         {
-            interaction.reply( { embeds : [ erremb( ':triangular_flag_on_post:  **|**  재생 목록이 없습니다.') ] } );
+            interaction.reply( { embeds : [ erremb( ':triangular_flag_on_post:  재생 목록이 없습니다.') ] } );
             return;
         }
 

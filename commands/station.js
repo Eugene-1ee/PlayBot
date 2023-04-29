@@ -5,6 +5,7 @@ const { erremb } = require( '../util/embed.js' );
 const { stat_handler } = require( '../functions/stat_handler.js' );
 
 let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
+const { songcheck } = require('../util/check.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -18,7 +19,7 @@ module.exports = {
             .setDescription( '스테이션을 끕니다.' ) )
         .addSubcommand( subcommand => subcommand
             .setName( '스킵' )
-            .setDescription( '스테이션을 스킵합니다? 이게 뭐지' ) ),
+            .setDescription( '스테이션을 스킵합니다. 일반 스킵을 하면 음악이 종료됩니다.' ) ),
     
 	async execute( interaction )
     {
@@ -29,51 +30,46 @@ module.exports = {
             val = interaction.options.getSubcommand();
         }
 
-        if ( !connection[ interaction.guild.id ] || getVoiceConnection( interaction.guild.id )._state.status !== 'ready' )
+        if ( songcheck( interaction ) )
         {
-            interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  **|**  재생 중인 노래가 없습니다!\n재생 중인 노래가 없어 스테이션 기능을 활성화 하지 못했습니다.' ) ] } );
-            return;
-        }
-        if ( !playlist[ interaction.guild.id ] )
-        {
-            interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  **|**  재생 목록을 찾지 못했습니다!' ) ] } );
+            interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  재생 중인 노래가 없습니다!\n재생 중인 노래가 없어 스테이션 기능을 활성화 하지 못했습니다.' ) ] } );
             return;
         }
 
-        if ( !val )
-        {
-            if ( station[ interaction.guild.id ] )
-            {
-                station[ interaction.guild.id ] = false;
-                const staemb = new EmbedBuilder( )
-                // .setColor('#0x7d3640')
-                    .setTitle( ':negative_squared_cross_mark:  **|**  스테이션 기능이 해제 되었습니다!' );
+        // if ( !val )
+        // {
+        //     if ( station[ interaction.guild.id ] )
+        //     {
+        //         station[ interaction.guild.id ] = false;
+        //         const staemb = new EmbedBuilder( )
+        //         // .setColor('#0x7d3640')
+        //             .setTitle( ':negative_squared_cross_mark:  스테이션 기능이 해제 되었습니다!' );
 
-                interaction.reply( { embeds: [ staemb ] } );
-            }
-            else if ( station[ interaction.guild.id ] === 'repeat' )
-            {
-                interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  **|**  반복 기능이 이미 활성화 되어있습니다!\n스테이션 기능은 반복 기능과 동시에 사용할 수 없습니다.\n반복을 종료하려면 반복 끄기를 입력해주세요.' ) ] } );
-                return;
-            }
-            else
-            {
-                station[ interaction.guild.id ] = 'on';
+        //         interaction.reply( { embeds: [ staemb ] } );
+        //     }
+        //     else if ( station[ interaction.guild.id ] === 'repeat' )
+        //     {
+        //         interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  반복 기능이 이미 활성화 되어있습니다!\n스테이션 기능은 반복 기능과 동시에 사용할 수 없습니다.\n반복을 종료하려면 반복 끄기를 입력해주세요.' ) ] } );
+        //         return;
+        //     }
+        //     else
+        //     {
+        //         station[ interaction.guild.id ] = 'on';
 
-                const staemb = new EmbedBuilder()
-                    // .setColor('#0x7d3640')
-                    .setTitle( ':fire:  **|**  스테이션 기능이 활성화 되었습니다!' );
+        //         const staemb = new EmbedBuilder()
+        //             // .setColor('#0x7d3640')
+        //             .setTitle( ':fire:  스테이션 기능이 활성화 되었습니다!' );
 
-                interaction.reply( { embeds: [ staemb ] } );
-            }
-        }
-        else
-        {
+        //         interaction.reply( { embeds: [ staemb ] } );
+        //     }
+        // }
+        // else
+        // {
             if ( val === '켜기' )
             {
                 if ( station[ interaction.guild.id ] === 'on' )
                 {
-                    interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  **|**  스테이션 기능이 이미 활성화 되어있습니다!\n스테이션을 종료하려면 스테이션 끄기를 입력해주세요.' ) ] } );
+                    interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  스테이션 기능이 이미 활성화 되어있습니다!\n스테이션을 종료하려면 스테이션 끄기를 입력해주세요.' ) ] } );
                     return;
                 }
 
@@ -81,7 +77,8 @@ module.exports = {
 
                 const staemb = new EmbedBuilder( )
                     // .setColor('#0x7d3640')
-                    .setTitle(':fire:  **|**  스테이션 기능이 활성화 되었습니다!');
+                    .setTitle( ':fire:  스테이션 기능이 활성화 되었습니다!' )
+                    .setDescription( '스테이션이 활성화 되어있을 때는 음악 추가 메시지가 뜨지 않습니다!' );
 
                 interaction.reply( { embeds: [ staemb ] } );
             }
@@ -89,7 +86,7 @@ module.exports = {
             {
                 if ( !station[ interaction.guild.id ] )
                 {
-                    interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  **|**  스테이션 기능이 아직 활성화 되지 않았습니다!\n스테이션을 시작하려면 스테이션 켜기를 입력해주세요.' ) ] } );
+                    interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  스테이션 기능이 아직 활성화 되지 않았습니다!\n스테이션을 시작하려면 스테이션 켜기를 입력해주세요.' ) ] } );
                     return;
                 }
 
@@ -97,7 +94,7 @@ module.exports = {
 
                 const staemb = new EmbedBuilder( )
                     // .setColor('#0x7d3640')
-                    .setTitle(':negative_squared_cross_mark:  **|**  스테이션 기능이 해제 되었습니다!' );
+                    .setTitle( ':negative_squared_cross_mark:  스테이션 기능이 해제 되었습니다!' );
                 
                 interaction.reply( { embeds: [ staemb ] } );
             }
@@ -105,7 +102,7 @@ module.exports = {
             {
                 if ( !station[ interaction.guild.id ] )
                 {
-                    interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  **|**  스테이션 기능이 아직 활성화 되지 않았습니다!\n스테이션을 시작하려면 스테이션 켜기를 입력해주세요.' ) ] } );
+                    interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  스테이션 기능이 아직 활성화 되지 않았습니다!\n스테이션을 시작하려면 스테이션 켜기를 입력해주세요.' ) ] } );
                     return;
                 }
 
@@ -113,16 +110,15 @@ module.exports = {
 
                 const staemb = new EmbedBuilder( )
                     // .setColor('#0x7d3640')
-                    .setTitle( ':fire: :track_next:  **|**  스테이션 곡이 스킵 되었습니다!' );
+                    .setTitle( ':fire: :track_next:  스테이션 곡이 스킵 되었습니다!' );
 
                 interaction.reply( { embeds: [ staemb ] } );
             }
             else
             {
-                interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  **|**  지정된 스테이션 상태가 올바르지 않습니다!\n스테이션 켜기 혹은 끄기로 상태를 지정 할 수 있습니다.' ) ] } );
+                interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  지정된 스테이션 상태가 올바르지 않습니다!\n스테이션 켜기 혹은 끄기로 상태를 지정 할 수 있습니다.' ) ] } );
                 return;
             }
-        }
-        
+        // }       
     }
 }

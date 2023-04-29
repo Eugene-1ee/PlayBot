@@ -5,6 +5,7 @@ const { erremb, queue } = require( '../util/embed.js' );
 const { Buttonpage2, pagemore } = require( '../util/button.js' )
 
 let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
+const { songcheck } = require('../util/check.js');
 
 module.exports = {
 	data: new SlashCommandBuilder( )
@@ -13,15 +14,10 @@ module.exports = {
     
 	async execute( interaction )
     {
-        if ( !connection[ interaction.guild.id ] || getVoiceConnection( interaction.guild.id )._state.status !== 'ready' )
+        if ( songcheck( interaction ) )
         {
-            return interaction.reply( { embeds : [ erremb( ':triangular_flag_on_post:  **|**  재생 목록을 없어요.' ) ] } );
+            return interaction.reply( { embeds : [ erremb( ':triangular_flag_on_post:  재생 목록을 없어요.' ) ] } );
         }
-        else if ( !playlist[ interaction.guild.id ] )
-        {
-            return interaction.reply( { embeds : [ erremb( ':triangular_flag_on_post:  **|**  재생 목록이 없어요.' ) ] } );
-        }
-
 
         let a = 0;
         for ( let unter in playlist[ interaction.guild.id ] )
