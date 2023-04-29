@@ -1,10 +1,10 @@
 {
   "name": "playbot",
-  "version": "1.0.0",
-  "description": "게임봇?으로 바뀜",
+  "version": "1.4.0",
+  "description": "PlayBot",
   "main": "index.js",
   "scripts": {
-    "test": "Test"
+    "test": "/ping"
   },
   "repository": {
     "type": "git",
@@ -17,7 +17,14 @@
   },
   "homepage": "https://github.com/Eugene-1ee/PlayBot#readme",
   "dependencies": {
-    "discord.js": "^14.7.1",
-    "dotenv": "^16.0.3"
+    "@discordjs/opus": "^0.9.0",
+    "@discordjs/voice": "^0.16.0",
+    "discord.js": "^14.9.0",
+    "dotenv": "^16.0.3",
+    "ffmpeg": "^0.0.4",
+    "ffmpeg-static": "^5.1.0",
+    "tweetnacl": "^1.0.3",
+    "ytdl-core": "^4.9.1",
+    "ytpl": "^2.3.0"
   }
 }

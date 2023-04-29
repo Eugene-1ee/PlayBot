@@ -1,5 +1,4 @@
-const { Events } = require( 'discord.js' );
-const fs = require( 'node:fs' );
+const { Events, EmbedBuilder } = require( 'discord.js' );
 
 module.exports =
 {
@@ -8,14 +7,6 @@ module.exports =
     {
         if ( !interaction.isChatInputCommand( ) )
         {
-            return;
-        }
-
-        const blacklist = JSON.parse( fs.readFileSync( 'assets/blacklist.json' ) );
-
-        if ( blacklist.indexOf( interaction.user.id ) != -1 )
-        {
-            interaction.reply( { content : '너 정지됨\n관리자한테 문의 ㄱ', ephemeral : true } );
             return;
         }
 
@@ -36,6 +27,12 @@ module.exports =
         {
             console.error( `${ interaction.commandName }을 실행하는 도중 오류가 발생했습니다.` );
             console.error( error );
+
+            const Embed = new EmbedBuilder( )
+                // .setColor( "#0x7d3640" )
+                .setTitle( "에러 발생!" );
+
+            return interaction.reply( { embeds: [ Embed ], ephemeral : true } );
         }
     }
 }

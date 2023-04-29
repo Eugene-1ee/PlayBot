@@ -1,9 +1,3 @@
-# Play bot - v1.5
+# play bot - v1.4
 
-서버농장의 봇 재생이의 소스입니다.
-
-Made by Eugene
-
-도커에 빌드할 때 node_modules 폴더를 지우고 빌드할 것!
-
-node --no-warnings .
+This is the source code of PlayBot-v1.4
