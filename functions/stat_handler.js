@@ -31,7 +31,7 @@ function stat_handler( interaction, guildId )
             {
                 const { adder } = require( '../functions/adder.js' );
 
-                await adder( interaction, rel_video[ unter ].title, rel_video[ unter ].id, rel_video[ unter ].length, rel_video[ unter ].user, true );
+                await adder( interaction, rel_video[ unter ].title, rel_video[ unter ].id, rel_video[ unter ].length_seconds, rel_video[ unter ].user, true );
                 return skiper( interaction, 0, ( ) => { } );
             }
         }
