@@ -30,14 +30,14 @@ async function play( interaction, title, id, length, user )
     }
 
     resource[ interaction.guild.id ] = createAudioResource( ytdl( url, { filter : 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25 } ), { inlineVolume: true } );
- 
+    
     resource[ interaction.guild.id ].volume.setVolume( volume[ interaction.guild.id ] );
 
     player[ interaction.guild.id ].play( resource[ interaction.guild.id ] );
 
     player[ interaction.guild.id ].once( AudioPlayerStatus.Idle, async ( ) =>
     {
-        if ( station[interaction.guild.id] === 'repeat' )
+        if ( station[ interaction.guild.id ] === 'repeat' )
         {
             const { adder } = require( '../functions/adder.js' );
 
@@ -49,7 +49,7 @@ async function play( interaction, title, id, length, user )
         {
             return stat_handler( interaction, interaction.guild.id );
         }
-            
+
         return skiper( interaction, 0, ( ) => { } );
     } );
 
