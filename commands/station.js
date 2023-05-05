@@ -8,7 +8,7 @@ let { connection, player, playlist, resource, volume, station } = require( '../f
 const { songcheck } = require('../util/check.js');
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	data: new SlashCommandBuilder( )
 		.setName( '스테이션' )
 		.setDescription( '유튜브 추천 동영상을 기반으로 비슷한 영상을 계속 재생해요.' )
         .addSubcommand( subcommand => subcommand
