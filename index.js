@@ -13,17 +13,6 @@ const client = new Client(
         GatewayIntentBits.GuildVoiceStates
     ]
 } );
-
-client.on( Events.Warn, console.warn );
-client.on( Events.Error, console.error );
-client.on( Events.ShardError, ( error ) => 
-    console.log( 'A websocket connection encountered an error:', error ) );
-client.on( Events.ShardDisconnect, ( event, id ) =>
-    console.log( "Bot Shard " + id + " disconnected (" + event.code + ") " + event + ", trying to reconnect..." ) );
-client.on( Events.ShardReconnecting, ( id ) =>
-    console.log( "Bot Shard " + id + " reconnecting..." ) );
-client.on( Events.WebhooksUpdate, ( update ) =>
-    console.log( 'Webhooks Update:\n', update ) );
     
 client.commands = new Collection( );
 
@@ -66,15 +55,30 @@ for ( const file of eventFiles )
     }
 };
 
-process.on( "unhandledRejection", async ( err ) => {
-    console.log( "Unhandled Promise Rejection:\n", err );
-});
-process.on( "uncaughtException", async ( err ) => {
-    console.log( "Uncaught Promise Exception:\n", err );
-});
-process.on( "uncaughtExceptionMonitor", async ( err ) => {
-    console.log( "Uncaught Promise Exception (Monitor):\n", err );
-});
+// Running an error
+const errorPath = path.join( __dirname, 'events/error' );
+const errorFiles = fs.readdirSync( errorPath ).filter( file => file.endsWith( '.js' ) );
+
+for ( const file of errorFiles )
+{
+    const filePath = path.join( errorPath, file );
+    const event = require( filePath );
+
+    client.on( event.name, ( ...args ) => event.execute( ...args ) );
+};
+
+// Running an debug
+const debugPath = path.join( __dirname, 'events/debug' );
+const debugFiles = fs.readdirSync( debugPath ).filter( file => file.endsWith( '.js' ) );
+
+for ( const file of debugFiles )
+{
+    const filePath = path.join( debugPath, file );
+    const debug = require( filePath );
+
+    process.on( debug.name, ( ...args ) => debug.execute( ...args ) );
+};
+
 // process.on( "multipleResolves", async ( type, promise, reason ) => {
 //     console.log( "Multiple Resolves:\n", type, promise, reason );
 // });
