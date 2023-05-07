@@ -3,9 +3,9 @@ const { getVoiceConnection } = require( '@discordjs/voice' );
 
 const { erremb } = require( '../util/embed.js' );
 const { skiper } = require( '../functions/skiper.js' );
+const { songcheck, usercheck } = require('../util/check.js');
 
 let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
-const { songcheck } = require('../util/check.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -28,6 +28,12 @@ module.exports = {
         if ( songcheck( interaction ) )
         {
             return interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  재생 중인 노래가 없습니다!' ) ] } );
+        }
+
+        if ( !usercheck( interaction ) )
+        {
+            interaction.reply( '통화방 이슈 발생' );
+            return;
         }
 
         val = parseInt( val );
