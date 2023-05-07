@@ -2,6 +2,11 @@ const { EmbedBuilder } = require( 'discord.js' );
 const timeConvert = require( './timeConvert' );
 let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
 
+/**
+ * 단순 에러 임베드
+ * @param { string } message 에러 메시지
+ * @returns 임베드
+ */
 function erremb( message )
 {
     const errembed = new EmbedBuilder( )
@@ -11,6 +16,12 @@ function erremb( message )
     return errembed;
 }
 
+/**
+ * 에러 임베드
+ * @param { string } title 제목
+ * @param { string } sub 설명
+ * @returns 임베드
+ */
 function norpembed( title, sub )
 {
     const norpbed = new EmbedBuilder( )
@@ -21,6 +32,12 @@ function norpembed( title, sub )
     return norpbed;
 };
 
+/**
+ * 대기열 임베드
+ * @param {} interaction
+ * @param { number } page 대기열 현재 페이지
+ * @returns 임베드
+ */
 function queue( interaction, page )
 {
     let queue = [];

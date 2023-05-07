@@ -2,6 +2,11 @@ const { cleanup } = require( '../functions/cleanup.js' );
 
 let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
 
+/**
+ * 스킵 관리자
+ * @param {} interaction
+ * @param { string } track 트랙 번호
+ */
 function skiper( interaction, track, callback )
 {
     delete playlist[ interaction.guild.id ][ track ];

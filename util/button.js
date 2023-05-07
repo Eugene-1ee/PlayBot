@@ -1,5 +1,11 @@
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require( 'discord.js' );
 
+/**
+ * 2페이지 이하의 대기열 버튼
+ * @param {} interaction
+ * @param { number } now 현재 페이지
+ * @returns 버튼
+ */
 function Buttonpage2( interaction, now )
 {
     let row;
@@ -42,6 +48,13 @@ function Buttonpage2( interaction, now )
     return row;
 }
 
+/**
+ * 3페이지 이상의 대기열 버튼
+ * @param {} interaction
+ * @param { number } now 현재 페이지
+ * @param { number } max 최고 페이지
+ * @returns 버튼
+ */
 function pagemore( interaction, now, max )
 {
     let row;

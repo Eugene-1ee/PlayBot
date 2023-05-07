@@ -1,6 +1,6 @@
 /**
  * Change the second to hour:minute:second
- * @param { number } seconds
+ * @param { number } seconds input seconds
  * @returns x:xx:xx
  */
  function timeConvert( seconds )

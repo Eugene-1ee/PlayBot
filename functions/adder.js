@@ -7,6 +7,14 @@ const { handler } = require( '../functions/handler.js' );
 
 let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
 
+/**
+ * 플레이리스트 관리자
+ * @param {} interaction
+ * @param { string } title 노래 제목
+ * @param { string } id 노래 id
+ * @param { string } length 노래 길이
+ * @param {} isList 플레이리스트인가?
+ */
 async function adder( interaction, title, id, length, isList )
 {
     //Connection

@@ -3,6 +3,11 @@ const { play } = require( '../functions/play.js' );
 
 let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
 
+/**
+ * 재생 중간 관리자
+ * @param {} interaction
+ * @param { string } guildId interaction.guild.id
+ */
 function handler( interaction, guildId )
 {
     if ( !playlist[ guildId ] )

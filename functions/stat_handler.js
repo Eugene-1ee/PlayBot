@@ -4,6 +4,11 @@ const { skiper } = require( '../functions/skiper.js' );
 
 let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
 
+/**
+ * 스테이션 관리자
+ * @param {} interaction
+ * @param { string } guildId 길드 id
+ */
 function stat_handler( interaction, guildId )
 {
     if ( station[ guildId ] === 'on' )

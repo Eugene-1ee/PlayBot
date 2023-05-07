@@ -3,6 +3,11 @@ const ytdl = require( 'ytdl-core' );
 const ytpl = require( 'ytpl' );
 require( 'dotenv' ).config( );
 
+/**
+ * 검색 정보 가져오기
+ * @param { string } q 검색어
+ * @returns 검색 정보
+ */
 function search( q, callback )
 {
     let options =
@@ -17,6 +22,11 @@ function search( q, callback )
     } );
 };
 
+/**
+ * 노래 정보 가져오기
+ * @param { string } id 비디오 id
+ * @returns 노래 정보
+ */
 async function getVideo( id, callback )
 {
     let data_temp = await ytdl.getBasicInfo( 'https://youtu.be/' + id );
@@ -29,6 +39,11 @@ async function getVideo( id, callback )
     return callback( data );
 };
 
+/**
+ * 플레이리스트 정보 가져오기
+ * @param { string } id 플레이리스트 id
+ * @returns 플레이리스트 정보
+ */
 async function getPlaylist( id, callback )
 {
     let playlist;
@@ -47,6 +62,11 @@ async function getPlaylist( id, callback )
     return callback( playlist );
 };
 
+/**
+ * 관련된 영상 가져오기
+ * @param { string } id 비디오 id
+ * @returns 관련된 영상 정보
+ */
 async function relatedVideo( id, callback )
 {
     let data_temp = await ytdl.getBasicInfo( 'https://youtu.be/' + id );
@@ -54,6 +74,11 @@ async function relatedVideo( id, callback )
     return callback( data_temp[ 'related_videos' ] );
 };
 
+/**
+ * 검색 정보 반환
+ * @param { string } option search 명령어 option값
+ * @returns 검색 정보
+ */
 function gety( option, callback )
 {
     https.get( option, function( res )

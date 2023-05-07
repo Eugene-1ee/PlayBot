@@ -12,6 +12,14 @@ let { connection, player, playlist, resource, volume, station } = require( '../f
 
 require( 'dotenv' ).config( );
 
+/**
+ * 재생 관리자
+ * @param {} interaction
+ * @param { string } title 노래 제목
+ * @param { string } id 노래 id
+ * @param { string } length 노래 길이
+ * @param {} user interaction.user
+ */
 async function play( interaction, title, id, length, user )
 {
     let url = 'https://youtu.be/' + id;

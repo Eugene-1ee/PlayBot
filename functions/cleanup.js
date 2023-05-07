@@ -2,6 +2,10 @@ const { erremb } = require( '../util/embed.js' );
 
 let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
 
+/**
+ * 초기화 관리자
+ * @param { string } guildId interaction.guild.id
+ */
 function cleanup( guildId )
 {
     if ( connection[ guildId ] )
