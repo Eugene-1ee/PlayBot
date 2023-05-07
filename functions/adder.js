@@ -10,10 +10,10 @@ let { connection, player, playlist, resource, volume, station } = require( '../f
 async function adder( interaction, title, id, length, isList )
 {
     //Connection
-    if ( !isList )
-    {
-        console.log( 'Channel:' + getVoiceConnection( interaction.guild.id ) );
-    }
+    // if ( !isList )
+    // {
+    //     console.log( 'Channel:' + getVoiceConnection( interaction.guild.id ) );
+    // }
 
     if ( !connection[ interaction.guild.id ]
         || await getVoiceConnection( interaction.guild.id )._state.status !== 'ready'
