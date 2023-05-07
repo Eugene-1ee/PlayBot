@@ -1,8 +1,9 @@
 module.exports =
 {
-    name : "unhandledRejection",
+    name : 'unhandledRejection',
     async execute( error )
     {
-        console.log( "Unhandled Promise Rejection:\n", error );
+        console.log( 'Unhandled Promise Rejection:\n', error.message );
+        return;
     }
 }
