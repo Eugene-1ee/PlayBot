@@ -19,6 +19,7 @@ function skiper( interaction, track, callback )
 
     if ( !playlist[ interaction.guild.id ][ 0 ] )
     {
+        interaction.channel.send( '모든 음악이 재생되었습니다.' );
         cleanup( interaction.guild.id );
         return callback( true );
     }
