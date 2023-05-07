@@ -7,11 +7,9 @@ function songcheck( interaction )
 {
     let check = false;
 
-    if ( !connection[ interaction.guild.id ] || getVoiceConnection( interaction.guild.id )._state.status !== 'ready' )
-    {
-        check = true;
-    }
-    if ( !playlist[ interaction.guild.id ] )
+    if ( ( !connection[ interaction.guild.id ]
+        || getVoiceConnection( interaction.guild.id )._state.status !== 'ready' )
+        && !playlist[ interaction.guild.id ] )
     {
         check = true;
     }
@@ -43,9 +41,33 @@ function musiccheck( interaction )
     return check;
 };
 
+function usercheck( interaction )
+{
+    let check = false;
+
+    if ( interaction.member.voice?.channelId )
+    {
+        if ( getVoiceConnection( interaction.guildId ) )
+        {
+            if ( getVoiceConnection( interaction.guild.id ).joinConfig.channelId
+                == interaction.member.voice.channelId )
+            {
+                check = true;
+            }
+        }
+        else
+        {
+            check = true;
+        }
+    }
+
+    return check;
+}
+
 module.exports =
 {
     songcheck: songcheck,
     connectcheck: connectcheck,
-    musiccheck: musiccheck
+    musiccheck: musiccheck,
+    usercheck: usercheck
 };
