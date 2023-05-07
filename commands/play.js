@@ -1,10 +1,11 @@
 const { EmbedBuilder, SlashCommandBuilder } = require( 'discord.js' );
 const ytdl = require( 'ytdl-core' );
 const ytpl = require( 'ytpl' );
-const youtube = require( '../util/youtube.js' );
 
+const youtube = require( '../util/youtube.js' );
 const { erremb, norpembed } = require( '../util/embed.js' );
 const { adder } = require( '../functions/adder.js' );
+const { usercheck } = require('../util/check.js');
 const timeConvert = require('../util/timeConvert.js');
 
 let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
@@ -32,6 +33,12 @@ module.exports =
     {
         let val = interaction.options.data[0].value;
 
+        if ( !usercheck( interaction ) )
+        {
+            interaction.reply( '통화방 이슈 발생' );
+            return;
+        }
+
         //URL
         if ( val.startsWith( 'http' ) )
         {
@@ -55,7 +62,7 @@ module.exports =
                         let data = await ytdl.getBasicInfo( 'https://youtu.be/' + val );
 
                         await interaction.reply( { embeds: [ listemb ] } );
-                        await interaction.editReply({ content: "성공", embeds: [] } );
+                        await interaction.editReply({ content: '성공', embeds: [] } );
 
                         return val_to_dt( val, interaction );
                     }
@@ -94,7 +101,7 @@ module.exports =
                         .setTitle( ':crystal_ball:  URL을 불러오고 있어요.' );
                     
                     await interaction.reply( { embeds: [ listemb ] } );
-                    await interaction.editReply({ content: "성공", embeds: [] } );
+                    await interaction.editReply({ content: '성공', embeds: [] } );
 
                     return val_to_dt( val, interaction );
                 }
@@ -229,9 +236,11 @@ module.exports =
                             {
                                 const data = await ytdl.getBasicInfo( 'https://youtu.be/' + videos[response.content].id.videoId );
 
-                                interaction.editReply( { content: "성공", embeds: [] } );
+                                interaction.editReply( { content: '성공', embeds: [] } );
 
-                                return adder( interaction, videos[response.content].snippet.title, videos[response.content].id.videoId, data[ 'videoDetails' ][ 'lengthSeconds' ], false );
+                                // console.log( data.videoDetails.author );
+
+                                return adder( interaction, videos[response.content].snippet.title, videos[response.content].id.videoId, data.videoDetails.lengthSeconds, false );
                             }
                             catch ( error )
                             {
