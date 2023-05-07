@@ -26,11 +26,14 @@ async function play( interaction, title, id, length, user )
 
     if ( getVoiceConnection( interaction.guild.id )._state.status !== 'ready' || !connection[ interaction.guild.id ] )
     {
-        return cleanup( interaction.guild.id );
+        cleanup( interaction.guild.id );
+        return;
     }
 
     resource[ interaction.guild.id ] = createAudioResource( ytdl( url, { filter : 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25 } ), { inlineVolume: true } );
-    
+
+    resource[ interaction.guild.id ][ 'interaction' ] = interaction;
+
     resource[ interaction.guild.id ].volume.setVolume( volume[ interaction.guild.id ] );
 
     player[ interaction.guild.id ].play( resource[ interaction.guild.id ] );
