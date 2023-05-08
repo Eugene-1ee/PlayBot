@@ -16,7 +16,7 @@ function cleanup( guildId )
 
     if ( player[ guildId ] )
     {
-        player[ guildId].stop();
+        player[ guildId ].stop();
         delete player[ guildId ];
     }
     
@@ -39,6 +39,8 @@ function cleanup( guildId )
     {
         delete station[ guildId ];
     }
+    
+    return;
 };
 
 module.exports =
