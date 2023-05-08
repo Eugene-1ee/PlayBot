@@ -1,6 +1,8 @@
+const { EmbedBuilder } = require( 'discord.js' );
+
 const { cleanup } = require( '../functions/cleanup.js' );
 
-let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
+let { connection, player, playlist, resource, station } = require( '../functions/val.js' );
 
 /**
  * 스킵 관리자
@@ -24,7 +26,11 @@ function skiper( interaction, track, callback )
 
     if ( !playlist[ interaction.guild.id ][ 0 ] )
     {
-        interaction.channel.send( '모든 음악이 재생되었습니다.' );
+        const embed = new EmbedBuilder( )
+        .setTitle( `모든 음악의 재생이 끝났습니다` )
+        .setDescription( '언제든 불러주세요!' );
+    
+        interaction.channel.send( { embeds: [ embed ] } );
         cleanup( interaction.guild.id );
         return callback( true );
     }
