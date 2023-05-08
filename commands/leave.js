@@ -1,11 +1,10 @@
 const { EmbedBuilder, SlashCommandBuilder } = require( 'discord.js' );
-const { getVoiceConnection } = require( '@discordjs/voice' );
 
 const { erremb } = require( '../util/embed.js' );
 const { cleanup } = require( '../functions/cleanup.js' );
 const { connectcheck, usercheck } = require( '../util/check.js' );
 
-let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
+let { connection, player, playlist, resource, station } = require( '../functions/val.js' );
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -16,7 +15,7 @@ module.exports = {
     {
         if ( connectcheck( interaction ) )
         {
-            interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  재생 중인 노래가 없습니다!' ) ] } );
+            interaction.reply( { embeds: [ erremb( '재생 중인 노래가 없습니다!' ) ] } );
             return;
         }
         

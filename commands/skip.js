@@ -5,7 +5,7 @@ const { erremb } = require( '../util/embed.js' );
 const { skiper } = require( '../functions/skiper.js' );
 const { songcheck, usercheck } = require('../util/check.js');
 
-let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
+let { connection, player, playlist, resource, station } = require( '../functions/val.js' );
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -27,7 +27,7 @@ module.exports = {
 
         if ( songcheck( interaction ) )
         {
-            return interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  재생 중인 노래가 없습니다!' ) ] } );
+            return interaction.reply( { embeds: [ erremb( '재생 중인 노래가 없습니다!' ) ] } );
         }
 
         if ( !usercheck( interaction ) )

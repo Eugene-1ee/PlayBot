@@ -4,7 +4,7 @@ const { getVoiceConnection } = require( '@discordjs/voice' );
 const { erremb, queue } = require( '../util/embed.js' );
 const { Buttonpage2, pagemore } = require( '../util/button.js' )
 
-let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
+let { connection, player, playlist, resource, station } = require( '../functions/val.js' );
 const { songcheck } = require('../util/check.js');
 
 module.exports = {
@@ -16,7 +16,7 @@ module.exports = {
     {
         if ( songcheck( interaction ) )
         {
-            return interaction.reply( { embeds : [ erremb( ':triangular_flag_on_post:  재생 목록이 없어요.' ) ] } );
+            return interaction.reply( { embeds : [ erremb( '재생 목록이 없어요.' ) ] } );
         }
 
         let a = 0;

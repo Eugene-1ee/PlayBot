@@ -3,7 +3,7 @@ const { getVoiceConnection } = require( '@discordjs/voice' );
 
 const { erremb } = require( '../util/embed.js' );
 
-let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
+let { connection, player, playlist, resource, station } = require( '../functions/val.js' );
 const { songcheck, usercheck } = require('../util/check.js');
 
 module.exports =
@@ -16,7 +16,7 @@ module.exports =
     {
         if ( songcheck( interaction ) )
         {
-            interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  재생 중인 노래가 없습니다!\n셔플은 노래를 재생하는 중에만 할 수 있습니다.' ) ] });
+            interaction.reply( { embeds: [ erremb( '재생 중인 노래가 없습니다!\n셔플은 노래를 재생하는 중에만 할 수 있습니다.' ) ] });
             return;
         }
 

@@ -6,15 +6,16 @@ const youtube = require( '../util/youtube.js' );
 const { erremb, norpembed } = require( '../util/embed.js' );
 const { adder } = require( '../functions/adder.js' );
 const { usercheck } = require('../util/check.js');
+const { searchButton } = require( '../util/button.js' );
 const timeConvert = require('../util/timeConvert.js');
 
-let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
+let { connection, player, playlist, resource, station } = require( '../functions/val.js' );
 
 function val_to_dt( val_in, interaction )
 {
     youtube.getVideo( val_in, ( data ) =>
     {
-        return adder( interaction, data.title, data.id, data.length, false );
+        return adder( interaction, data.title, data.id, data.length, data.author, false );
     } );
 };
 
@@ -24,9 +25,9 @@ module.exports =
 		.setName( '재생' )
 		.setDescription( '노래를 재생하거나 재생목록에 추가합니다.' )
         .addStringOption( ( option ) =>
-            option.setName( '옵션' )
-                .setDescription( '유튜브 영상의 URL 또는 제목을 입력해주세요. 재생목록도 가능합니다.' )
-                .setRequired( true ) ),
+        option.setName( '옵션' )
+            .setDescription( '유튜브 영상의 URL 또는 제목을 입력해주세요. 재생목록도 가능합니다.' )
+            .setRequired( true ) ),
     
 	async execute( interaction )
     {
@@ -61,7 +62,7 @@ module.exports =
                         let data = await ytdl.getBasicInfo( 'https://youtu.be/' + val );
 
                         await interaction.reply( { embeds: [ listemb ] } );
-                        await interaction.editReply({ content: `${data.videoDetails.title} 등록됨!`, embeds: [] } );
+                        await interaction.editReply({ content: `**${data.videoDetails.title}** 등록됨!`, embeds: [] } );
 
                         val_to_dt( val, interaction );
                         return;
@@ -74,7 +75,7 @@ module.exports =
                 }
                 else
                 {
-                    interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  URL이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
+                    interaction.reply( { embeds: [ erremb( 'URL이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
                     return;
                 }
             }
@@ -105,14 +106,14 @@ module.exports =
                         .setTitle( ':crystal_ball:  URL을 불러오고 있어요.' );
                     
                     await interaction.reply( { embeds: [ listemb ] } );
-                    await interaction.editReply({ content: `${data.videoDetails.title} 등록됨!`, embeds: [] } );
+                    await interaction.editReply({ content: `**${data.videoDetails.title}** 등록됨!`, embeds: [] } );
 
                     val_to_dt( val, interaction );
                     return;
                 }
                 else
                 {
-                    interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  URL이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
+                    interaction.reply( { embeds: [ erremb( 'URL이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
                     return;
                 }
             }
@@ -133,7 +134,7 @@ module.exports =
                         await interaction.deferReply( );
                         if ( !list )
                         {
-                            interaction.editReply( { embeds: [ erremb( ':triangular_flag_on_post:  URL이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
+                            interaction.editReply( { embeds: [ erremb( 'URL이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
                             return;
                         }
     
@@ -144,7 +145,7 @@ module.exports =
                         {
                             try
                             {
-                                let data = await ytdl.getBasicInfo( 'https://youtu.be/' + list[unter].id );
+                                const data = await ytdl.getBasicInfo( 'https://youtu.be/' + list[unter].id );
 
                                 if ( res.length <= 1500 )
                                 {
@@ -156,11 +157,10 @@ module.exports =
                                     over++;
                                 }
 
-                                await adder( interaction, list[unter].title, list[unter].id, list[unter].durationSec, true );
+                                await adder( interaction, data.videoDetails.title, data.videoDetails.id, data.videoDetails.lengthSeconds, data.videoDetails.author, true );
                             }
                             catch ( err )
                             {
-                                console.log( '재생할 수 없는 영상이 있음' );
                                 song += 1
                             }
                         }
@@ -171,7 +171,7 @@ module.exports =
                         }    
                         if ( song > 0 )
                         {
-                            res += `\n**${song}개의 노래가 재생이 불가함.**`
+                            res += `\n**${song}개의 노래가 재생 불가합니다.**`
                         }
 
                         const listemb = new EmbedBuilder( )
@@ -187,14 +187,14 @@ module.exports =
                 }
                 else
                 {
-                    interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  URL이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
+                    interaction.reply( { embeds: [ erremb( 'URL이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
                     return;
                 }
             }
             //Playlist
             else
             {
-                interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  URL 형식이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
+                interaction.reply( { embeds: [ erremb( 'URL 형식이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
                 return;
             }
         }
@@ -217,61 +217,63 @@ module.exports =
                 // .setColor('#0x7d3640')
                     .setAuthor( { name: '검색 결과', iconURL: interaction.user.displayAvatarURL( ) } )
                     .setDescription( res )
-                    .setFooter( { text: '트랙 번호만 입력하시거나 취소하시려면  `취소`  라고 입력해 주세요.' } );
+                    .setFooter( { text: '트랙 번호에 해당하는 버튼을 눌러주세요!' } );
 
-                interaction.reply( { embeds: [src] } ).then( async ( ) =>
+
+                interaction.reply( { embeds: [src], components: [searchButton(interaction)[0], searchButton(interaction)[1], searchButton(interaction)[2]] } ).then( async ( ) =>
                 {
-                    interaction.channel.awaitMessages(
+                    let check;
+
+                    interaction.channel.awaitMessageComponent(
                     {
-                        filter: m => m.author.id === interaction.user.id,
+                        filter: m => m.user.id === interaction.user.id,
                         max: 1,
                         time: 30000,
                         errors: ['time']
                     }).then( async ( response ) =>
                     {
-                        response = response.first();
+                        check = true;
 
-                        if ( response.content == '취소' )
+                        if ( response.customId == 'cancel' )
                         {
-                            response.delete();
-
-                            return interaction.editReply( { embeds: [ norpembed( ':triangular_flag_on_post:  곡 선택이 취소되었습니다!', '잘못 검색한건감' ) ] } );
+                            return interaction.editReply( { embeds: [ norpembed( '곡 선택이 취소되었습니다!', '잘못 검색한건감' ) ], components: [] } );
                         }
-                        if ( parseInt(response.content) > 0 && parseInt(response.content) < 11 )
+
+                        if ( parseInt(response.customId) > 0 && parseInt(response.customId) < 11 )
                         {
-                            response.delete();
-                            response.content = parseInt( response.content ) - 1;
+                            response.customId = parseInt( response.customId ) - 1;
                             
                             try
                             {
-                                const data = await ytdl.getBasicInfo( 'https://youtu.be/' + videos[response.content].id.videoId );
+                                const data = await ytdl.getBasicInfo( 'https://youtu.be/' + videos[response.customId].id.videoId );
 
-                                interaction.editReply( { content: `${data.videoDetails.title} 등록됨!`, embeds: [] } );
+                                interaction.editReply( { content: `**${data.videoDetails.title}** 등록됨!`, embeds: [], components: [] } );
 
-                                // console.log( data.videoDetails.author );
-
-                                adder( interaction, videos[response.content].snippet.title, videos[response.content].id.videoId, data.videoDetails.lengthSeconds, false );
+                                adder( interaction, data.videoDetails.title, data.videoDetails.id, data.videoDetails.lengthSeconds, data.videoDetails.author, false );
                                 return;
                             }
                             catch ( error )
                             {
-                                interaction.editReply( { content: '재생할 수 없는 영상이야!', embeds: [] } );
+                                interaction.editReply( { content: '재생할 수 없는 영상이야!', embeds: [], components: [] } );
                                 return;
                             }
                         }
                         else
                         {
-                            interaction.editReply( { embeds: [ norpembed( ':triangular_flag_on_post:  곡 선택이 취소되었습니다!', '올바르지 않은 수가 입력되었습니다. 1 ~ 10 안으로 선택 해주세요.' ) ] } );
+                            interaction.editReply( { embeds: [ norpembed( '곡 선택이 취소되었습니다!', '올바르지 않은 수가 입력되었습니다. 1 ~ 10 안으로 선택 해주세요.' ) ], components: [] } );
                             return;
                         }
                     } ).catch( ( err ) =>
                     {
-                        interaction.editReply( { embeds: [ norpembed( ':triangular_flag_on_post:  곡 선택이 취소되었습니다!', '곡을 선택하는데 너무 오랜 시간이 걸렸습니다.' ) ] } );
+                        if ( !check )
+                        {
+                            interaction.editReply( { embeds: [ norpembed( '곡 선택이 취소되었습니다!', '곡을 선택하는데 너무 오랜 시간이 걸렸습니다.' ) ], components: [] } );
+                        }
                         return;
                     } );
-                });
+                } );
 
-            });
+            } );
         }
         //Search
 	}

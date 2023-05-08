@@ -4,7 +4,7 @@ const timeConvert = require( '../util/timeConvert' );
 const { erremb } = require( '../util/embed' );
 const { musiccheck } = require('../util/check');
 
-let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
+let { connection, player, playlist, resource, station } = require( '../functions/val.js' );
 
 module.exports =
 {
@@ -16,11 +16,9 @@ module.exports =
     {
         if ( musiccheck( interaction ) )
         {
-            interaction.reply( { embeds : [ erremb( ':triangular_flag_on_post:  재생 목록이 없습니다.') ] } );
+            interaction.reply( { embeds : [ erremb( '재생 목록이 없습니다.') ] } );
             return;
         }
-
-        console.log( process.memoryUsage().heapUsed / 1024 / 1024 );
 
         const currentSong = playlist[ interaction.guild.id ][ 0 ];
         const time = timeConvert( Number( playlist[ interaction.guild.id ][ 0 ].length ) );
@@ -30,14 +28,19 @@ module.exports =
         let bar = '▬▬▬▬▬▬▬▬▬▬▬▬';
         bar = bar.substring( 0, num ) + ':radio_button:' + bar.substring( num + 1 );
 
+        console.log( ( process.memoryUsage().heapUsed / 1024 / 1024 ) + 'mb' );
+
         const embed = new EmbedBuilder()
             .setTitle( `Now Playing` )
             .setThumbnail( `https://img.youtube.com/vi/${currentSong.id}/mqdefault.jpg` )
             .setDescription( `[${currentSong.title}](https://www.youtube.com/watch?v=${currentSong.id})\n\n${playtime}  ` + bar + `  ${time}` )
             .setColor( '#9080a1' )
+            .setFooter( { text: currentSong[ 'user' ].username + '#' + currentSong[ 'user' ].discriminator } )
             .setAuthor(
                 {
-                    name : currentSong[ 'user' ].username + '#' + currentSong[ 'user' ].discriminator
+                    name : currentSong.author.name,
+                    iconURL : currentSong.author.thumbnails.at( -1 ).url,
+                    url : currentSong.author.channel_url
                 } );
 
         await interaction.reply( { embeds : [ embed ] } );
