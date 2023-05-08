@@ -8,7 +8,7 @@ const { cleanup } = require( '../functions/cleanup.js' );
 const { skiper } = require( '../functions/skiper.js' );
 const { stat_handler } = require( '../functions/stat_handler.js' );
 
-let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
+let { connection, player, playlist, resource, station } = require( '../functions/val.js' );
 
 require( 'dotenv' ).config( );
 
@@ -18,19 +18,17 @@ require( 'dotenv' ).config( );
  * @param { string } title 노래 제목
  * @param { string } id 노래 id
  * @param { string } length 노래 길이
+ * @param {} author 노래 채널
  * @param {} user interaction.user
+ * @param { Boolean } next true면 메시지 띄움
  */
-async function play( interaction, title, id, length, user )
+async function play( interaction, title, id, length, author, user, next )
 {
     let url = 'https://youtu.be/' + id;
 
     player[ interaction.guild.id ] = createAudioPlayer( );
+    
     connection[ interaction.guild.id ].subscribe( player[ interaction.guild.id ] );
-
-    if ( !volume[ interaction.guild.id] )
-    {
-        volume[ interaction.guild.id ] = 1;
-    }
 
     if ( getVoiceConnection( interaction.guild.id )._state.status !== 'ready' || !connection[ interaction.guild.id ] )
     {
@@ -38,11 +36,9 @@ async function play( interaction, title, id, length, user )
         return;
     }
 
-    resource[ interaction.guild.id ] = createAudioResource( ytdl( url, { filter : 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25 } ), { inlineVolume: true } );
+    resource[ interaction.guild.id ] = createAudioResource( ytdl( url, { filter : 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25 } ), { inlineVolume: false } );
 
     resource[ interaction.guild.id ][ 'interaction' ] = interaction;
-
-    resource[ interaction.guild.id ].volume.setVolume( volume[ interaction.guild.id ] );
 
     player[ interaction.guild.id ].play( resource[ interaction.guild.id ] );
 
@@ -52,7 +48,7 @@ async function play( interaction, title, id, length, user )
         {
             const { adder } = require( '../functions/adder.js' );
 
-            await adder( interaction, title, id, length, user, true );
+            await adder( interaction, title, id, length, author, user, true );
             return skiper( interaction, 0, ( ) => { } );
         }
 
@@ -64,12 +60,12 @@ async function play( interaction, title, id, length, user )
         return skiper( interaction, 0, ( ) => { } );
     } );
 
-    if ( station[ interaction.guild.id ] === 'repeat' )
+    if ( station[ interaction.guild.id ] === 'repeat' || !next )
     {
         return;
     }
     
-    let playemb = new EmbedBuilder( )
+    const playemb = new EmbedBuilder( )
     // .setColor('#0x7d3640')
         .setThumbnail( 'https://img.youtube.com/vi/' + id + '/mqdefault.jpg' )
         .setDescription( `[${title}](https://www.youtube.com/watch?v=${id}) \`\`${timeConvert(length)}\`\`` )
@@ -84,7 +80,8 @@ async function play( interaction, title, id, length, user )
         playemb.setTitle( ':fire: Now Playing' );
     }
 
-    return interaction.channel.send( { embeds: [ playemb ] } );
+    interaction.channel.send( { embeds: [ playemb ] } )
+    return;
 };
 
 module.exports =
