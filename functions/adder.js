@@ -1,11 +1,10 @@
 const { EmbedBuilder } = require( 'discord.js' );
 const { joinVoiceChannel, VoiceConnectionStatus, getVoiceConnection } = require( '@discordjs/voice' );
 
-const { erremb } = require( '../util/embed.js' );
 const { cleanup } = require( '../functions/cleanup.js' );
 const { handler } = require( '../functions/handler.js' );
 
-let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
+let { connection, player, playlist, resource, station } = require( '../functions/val.js' );
 
 /**
  * 플레이리스트 관리자
@@ -13,16 +12,11 @@ let { connection, player, playlist, resource, volume, station } = require( '../f
  * @param { string } title 노래 제목
  * @param { string } id 노래 id
  * @param { string } length 노래 길이
- * @param {} isList 플레이리스트인가?
+ * @param {} author 노래 채널
+ * @param { boolean } isList 플레이리스트여부
  */
-async function adder( interaction, title, id, length, isList )
+async function adder( interaction, title, id, length, author, isList )
 {
-    //Connection
-    // if ( !isList )
-    // {
-    //     console.log( 'Channel:' + getVoiceConnection( interaction.guild.id ) );
-    // }
-
     if ( !connection[ interaction.guild.id ]
         || await getVoiceConnection( interaction.guild.id )._state.status !== 'ready'
         && await getVoiceConnection( interaction.guild.id )._state.status !== 'signalling' )
@@ -56,9 +50,11 @@ async function adder( interaction, title, id, length, isList )
     song[ 'title' ] = title;
     song[ 'id' ] = id;
     song[ 'length' ] = length;
+    song[ 'author' ] = author;
+    song[ 'user' ] = interaction.user;
 
     playlist[ interaction.guild.id ][ temp_index ] = song;
-    playlist[ interaction.guild.id ][ temp_index ][ 'user' ] = interaction.user;
+
     //Add Song
 
     if ( resource[ interaction.guild.id ] )
@@ -72,9 +68,10 @@ async function adder( interaction, title, id, length, isList )
         {
             const adderemb = new EmbedBuilder( )
             // .setColor('#0x7d3640')
-                .setTitle( ':white_check_mark:  **|**  재생목록에 추가했습니다!' )
-                .setDescription( title )
-                .setThumbnail( 'https://img.youtube.com/vi/' + id + '/mqdefault.jpg' );
+                .setTitle( '**|**  재생목록에 추가했습니다!' )
+                .setDescription( `[${title}](https://www.youtube.com/watch?v=${id})` )
+                .setThumbnail( 'https://img.youtube.com/vi/' + id + '/mqdefault.jpg' )
+                .setFooter( { text: author.name, iconURL: author.thumbnails.at( -1 ).url } );
             
             return interaction.channel.send( { embeds: [ adderemb ] } );
         }
