@@ -1,8 +1,7 @@
 const youtube = require( '../util/youtube.js' );
-const { erremb } = require( '../util/embed.js' );
 const { skiper } = require( '../functions/skiper.js' );
 
-let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
+let { connection, player, playlist, resource, station } = require( '../functions/val.js' );
 
 /**
  * 스테이션 관리자
@@ -35,8 +34,8 @@ function stat_handler( interaction, guildId )
             if ( !station[ guildId ].find( element => element === rel_video[ unter ].id ) )
             {
                 const { adder } = require( '../functions/adder.js' );
-
-                await adder( interaction, rel_video[ unter ].title, rel_video[ unter ].id, rel_video[ unter ].length_seconds, rel_video[ unter ].user, true );
+                
+                await adder( interaction, rel_video[ unter ].title, rel_video[ unter ].id, rel_video[ unter ].length_seconds, rel_video[ unter ].author, rel_video[ unter ].user, true );
                 return skiper( interaction, 0, ( ) => { } );
             }
         }
