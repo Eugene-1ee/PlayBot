@@ -1,6 +1,6 @@
 const { EmbedBuilder } = require( 'discord.js' );
 const timeConvert = require( './timeConvert' );
-let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
+let { connection, player, playlist, resource, station } = require( '../functions/val.js' );
 
 /**
  * 단순 에러 임베드
@@ -41,23 +41,23 @@ function norpembed( title, sub )
 function queue( interaction, page )
 {
     let queue = [];
-    let a = 0;
+    let count = 0;
 
-    for ( let unter in playlist[ interaction.guild.id ] )
+    for ( let unter in playlist[interaction.guild.id] )
     {
-        queue[ a ] =
+        queue[ count ] =
         {
-            'title': `${playlist[ interaction.guild.id ][ unter ][ 'title' ]}`,
-            'id': `${playlist[ interaction.guild.id ][ unter ][ 'id' ]}`,
-            'length': `${playlist[ interaction.guild.id ][ unter ][ 'length' ]}`,
-            'user': `${playlist[ interaction.guild.id ][ unter ][ 'user' ]}`,
+            'title': `${playlist[interaction.guild.id][unter]['title']}`,
+            'id': `${playlist[interaction.guild.id][unter]['id']}`,
+            'length': `${playlist[interaction.guild.id][unter]['length']}`,
+            'user': `${playlist[interaction.guild.id][unter]['user']}`,
         };
 
-        a++;
+        count++;
     }
     
-    const currentSong = queue[ 0 ];
-    const currentTime = timeConvert( Number( currentSong.length ) - parseInt( player[ interaction.guild.id ]._state.playbackDuration / 1000 ) );
+    const currentSong = queue[0];
+    const currentTime = timeConvert( Number(currentSong.length) - parseInt( player[interaction.guild.id]._state.playbackDuration / 1000 ) );
     
     if ( queue.length == 1 ) //When there are no songs in the queue:
     {
@@ -77,15 +77,23 @@ function queue( interaction, page )
 
         const queueString = newQueue.slice( page * 10, page * 10 + 10 ).map( ( song, i ) => 
         {
-            return `\`${ page * 10 + i + 1 }\` [${song.title}](https://www.youtube.com/watch?v=${song.id}) \`\`${timeConvert( song.length )}\`\`\n-${ song.user }`;
+            return `\`${ page * 10 + i + 1 }\` [${song.title}](https://www.youtube.com/watch?v=${song.id}) \`\`${timeConvert(song.length)}\`\`\n${song.user}`;
         } ).join( '\n' );
 
         const embed = new EmbedBuilder( )
             .setTitle( `Music Queue (${queue.length - 1} tracks)` )
-            .setDescription( `**Now Playing**\n[${currentSong.title}](https://www.youtube.com/watch?v=${currentSong.id}) ${currentTime} left -${currentSong.user}\n\n${queueString}` )
+            .setDescription( `**Now Playing**\n[${currentSong.title}](https://www.youtube.com/watch?v=${currentSong.id}) ${currentTime} left\n${currentSong.user}\n\n${queueString}` )
             .setThumbnail( `https://img.youtube.com/vi/${currentSong.id}/mqdefault.jpg` )
-        // .setColor( '#9080a1' )
-            .setFooter( { text: `Page ${page + 1}/${totalPages}` } );
+        // .setColor( '#9080a1' );
+
+        if ( totalPages == 1 )
+        {
+            embed.setFooter( { text: `${queue.length} songs` } );
+        }
+        else
+        {
+            embed.setFooter( { text: `Page ${page + 1}/${totalPages}` } );
+        }
 
         return embed;
     }
