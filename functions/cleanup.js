@@ -1,6 +1,6 @@
 const { erremb } = require( '../util/embed.js' );
 
-let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
+let { connection, player, playlist, resource, station } = require( '../functions/val.js' );
 
 /**
  * 초기화 관리자
@@ -28,11 +28,6 @@ function cleanup( guildId )
     if ( resource[ guildId ] )
     {
         delete resource[ guildId ];
-    }
-
-    if ( volume[ guildId ] )
-    {
-        delete volume[ guildId ];
     }
 
     if ( station[ guildId ] )
