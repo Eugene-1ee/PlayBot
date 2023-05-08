@@ -1,7 +1,7 @@
 const { cleanup } = require( '../functions/cleanup.js' );
 const { play } = require( '../functions/play.js' );
 
-let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
+let { connection, player, playlist, resource, station } = require( '../functions/val.js' );
 
 /**
  * 재생 중간 관리자
@@ -17,7 +17,7 @@ function handler( interaction, guildId )
 
     let song = playlist[ guildId ][ 0 ];
 
-    return play( interaction, song.title, song.id, song.length, song.user );
+    return play( interaction, song.title, song.id, song.length, song.author, song.user, true );
 };
 
 module.exports =
