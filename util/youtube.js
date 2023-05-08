@@ -31,10 +31,11 @@ async function getVideo( id, callback )
 {
     let data_temp = await ytdl.getBasicInfo( 'https://youtu.be/' + id );
 
-    let data = new Map();
-    data[ 'id' ] = data_temp[ 'videoDetails' ][ 'videoId' ];
-    data[ 'title' ] = data_temp[ 'videoDetails' ][ 'title' ];
-    data[ 'length' ] = data_temp[ 'videoDetails' ][ 'lengthSeconds' ];
+    let data = new Map( );
+    data[ 'id' ] = data_temp.videoDetails.videoId;
+    data[ 'title' ] = data_temp.videoDetails.title;
+    data[ 'length' ] = data_temp.videoDetails.lengthSeconds;
+    data[ 'author' ] = data_temp.videoDetails.author;
 
     return callback( data );
 };
@@ -98,7 +99,7 @@ function gety( option, callback )
         } );
     } ).on( 'error', function( error )
     {
-        return callback( JSON.parse( "status:{message: 'Error On Req', status_code: 404}" ) );
+        return callback( JSON.parse( 'status:{message: "Error On Req", status_code: 404}' ) );
     } );
 };
 
