@@ -1,7 +1,7 @@
 const { EmbedBuilder, SlashCommandBuilder } = require( 'discord.js' );
 const { getVoiceConnection } = require( '@discordjs/voice' );
 
-let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
+let { connection, player, playlist, resource, station } = require( '../functions/val.js' );
 
 /**
  * 재생 확인
