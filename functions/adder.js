@@ -33,6 +33,8 @@ async function adder( interaction, title, id, length, isList )
             channelId: interaction.member.voice.channel.id,
             guildId: interaction.guild.id,
             adapterCreator: interaction.guild.voiceAdapterCreator,
+            selfDeaf: false,
+            selfMute: false
         } );
     }
     //Connection
