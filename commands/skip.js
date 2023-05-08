@@ -56,12 +56,14 @@ module.exports = {
                     .setDescription( temp_tilt.title )
                     .setThumbnail( 'https://img.youtube.com/vi/' + temp_tilt.id + '/mqdefault.jpg' );
 
-                return interaction.reply( { embeds: [ skiemb ] } );
+                interaction.reply( { embeds: [ skiemb ] } )
+                return;
             } );
         }
         else
         {
-            return interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  ' + (val) + '번 트랙을 찾지 못했습니다!\n재생목록 에서 트랙 번호를 다시 한번 확인 해주세요!' ) ] } );
+            interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  ' + (val) + '번 트랙을 찾지 못했습니다!\n재생목록 에서 트랙 번호를 다시 한번 확인 해주세요!' ) ] } );
+            return;
         }
     }
 }

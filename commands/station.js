@@ -87,6 +87,7 @@ module.exports = {
                     .setDescription( '스테이션이 활성화 되어있을 때는 음악 추가 메시지가 뜨지 않습니다!' );
 
                 interaction.reply( { embeds: [ staemb ] } );
+                return;
             }
             else if ( val === '끄기' )
             {
@@ -103,6 +104,7 @@ module.exports = {
                     .setTitle( ':negative_squared_cross_mark:  스테이션 기능이 해제 되었습니다!' );
                 
                 interaction.reply( { embeds: [ staemb ] } );
+                return
             }
             else if ( val === '스킵' )
             {
@@ -119,6 +121,7 @@ module.exports = {
                     .setTitle( ':fire: :track_next:  스테이션 곡이 스킵 되었습니다!' );
 
                 interaction.reply( { embeds: [ staemb ] } );
+                return;
             }
             else
             {

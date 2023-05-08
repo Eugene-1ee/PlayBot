@@ -10,7 +10,6 @@ const timeConvert = require('../util/timeConvert.js');
 
 let { connection, player, playlist, resource, volume, station } = require( '../functions/val.js' );
 
-
 function val_to_dt( val_in, interaction )
 {
     youtube.getVideo( val_in, ( data ) =>
@@ -62,18 +61,21 @@ module.exports =
                         let data = await ytdl.getBasicInfo( 'https://youtu.be/' + val );
 
                         await interaction.reply( { embeds: [ listemb ] } );
-                        await interaction.editReply({ content: '성공', embeds: [] } );
+                        await interaction.editReply({ content: `${data.videoDetails.title} 등록됨!`, embeds: [] } );
 
-                        return val_to_dt( val, interaction );
+                        val_to_dt( val, interaction );
+                        return;
                     }
                     catch ( error )
                     {
-                        return interaction.reply( '재생할 수 없는 영상이야!' );
+                        interaction.reply( '재생할 수 없는 영상이야!' );
+                        return;
                     }
                 }
                 else
                 {
-                    return interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  URL이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
+                    interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  URL이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
+                    return;
                 }
             }
             else if ( val.search('youtu.be/') > -1 )
@@ -87,9 +89,11 @@ module.exports =
 
                 if ( ytdl.validateID( val ) )
                 {
+                    let data;
+                    
                     try
                     {
-                        let data = await ytdl.getBasicInfo( 'https://youtu.be/' + val );
+                        data = await ytdl.getBasicInfo( 'https://youtu.be/' + val );
                     }
                     catch ( error )
                     {
@@ -101,13 +105,15 @@ module.exports =
                         .setTitle( ':crystal_ball:  URL을 불러오고 있어요.' );
                     
                     await interaction.reply( { embeds: [ listemb ] } );
-                    await interaction.editReply({ content: '성공', embeds: [] } );
+                    await interaction.editReply({ content: `${data.videoDetails.title} 등록됨!`, embeds: [] } );
 
-                    return val_to_dt( val, interaction );
+                    val_to_dt( val, interaction );
+                    return;
                 }
                 else
                 {
-                    return interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  URL이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
+                    interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  URL이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
+                    return;
                 }
             }
             //Playlist
@@ -127,11 +133,12 @@ module.exports =
                         await interaction.deferReply( );
                         if ( !list )
                         {
-                            return interaction.editReply( { embeds: [ erremb( ':triangular_flag_on_post:  URL이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
+                            interaction.editReply( { embeds: [ erremb( ':triangular_flag_on_post:  URL이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
+                            return;
                         }
     
                         let res = '';
-                        let orig = 1, song = 0, word = 0, over = 0;
+                        let orig = 1, song = 0, over = 0;
     
                         for ( let unter in list )
                         {
@@ -139,7 +146,7 @@ module.exports =
                             {
                                 let data = await ytdl.getBasicInfo( 'https://youtu.be/' + list[unter].id );
 
-                                if ( word <= 1500 )
+                                if ( res.length <= 1500 )
                                 {
                                     res += '**`' + orig + '`**  ' + list[unter].title + `   \`\`${timeConvert( list[unter].durationSec )}\`\`` + '\n';
                                     ++orig;
@@ -172,20 +179,23 @@ module.exports =
                             .setTitle( `:white_check_mark: ${orig + over - 1}개의 노래를 대기열에 추가했습니다!` )
                             .setDescription( res )
                             .setThumbnail( 'https://img.youtube.com/vi/' + list[0].id + '/mqdefault.jpg' );
- 
-                        return await interaction.editReply( { embeds: [ listemb ] } );
+
+                        await interaction.editReply( { embeds: [ listemb ] } );
+                        return;
                     });
 
                 }
                 else
                 {
-                    return interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  URL이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
+                    interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  URL이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
+                    return;
                 }
             }
             //Playlist
             else
             {
-                return interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  URL 형식이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
+                interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  URL 형식이 올바르지 않습니다! URL이 올바른지 다시 한번 확인 해주세요!' ) ] } );
+                return;
             }
         }
         //URL
@@ -230,30 +240,34 @@ module.exports =
                         if ( parseInt(response.content) > 0 && parseInt(response.content) < 11 )
                         {
                             response.delete();
-                            response.content = parseInt(response.content) - 1;
+                            response.content = parseInt( response.content ) - 1;
                             
                             try
                             {
                                 const data = await ytdl.getBasicInfo( 'https://youtu.be/' + videos[response.content].id.videoId );
 
-                                interaction.editReply( { content: '성공', embeds: [] } );
+                                interaction.editReply( { content: `${data.videoDetails.title} 등록됨!`, embeds: [] } );
 
                                 // console.log( data.videoDetails.author );
 
-                                return adder( interaction, videos[response.content].snippet.title, videos[response.content].id.videoId, data.videoDetails.lengthSeconds, false );
+                                adder( interaction, videos[response.content].snippet.title, videos[response.content].id.videoId, data.videoDetails.lengthSeconds, false );
+                                return;
                             }
                             catch ( error )
                             {
-                                return interaction.editReply( { content: '재생할 수 없는 영상이야!', embeds: [] } );
+                                interaction.editReply( { content: '재생할 수 없는 영상이야!', embeds: [] } );
+                                return;
                             }
                         }
                         else
                         {
-                            return interaction.editReply( { embeds: [ norpembed( ':triangular_flag_on_post:  곡 선택이 취소되었습니다!', '올바르지 않은 수가 입력되었습니다. 1 ~ 10 안으로 선택 해주세요.' ) ] } );
+                            interaction.editReply( { embeds: [ norpembed( ':triangular_flag_on_post:  곡 선택이 취소되었습니다!', '올바르지 않은 수가 입력되었습니다. 1 ~ 10 안으로 선택 해주세요.' ) ] } );
+                            return;
                         }
                     } ).catch( ( err ) =>
                     {
-                        return interaction.editReply( { embeds: [ norpembed( ':triangular_flag_on_post:  곡 선택이 취소되었습니다!', '곡을 선택하는데 너무 오랜 시간이 걸렸습니다.' ) ] } );
+                        interaction.editReply( { embeds: [ norpembed( ':triangular_flag_on_post:  곡 선택이 취소되었습니다!', '곡을 선택하는데 너무 오랜 시간이 걸렸습니다.' ) ] } );
+                        return;
                     } );
                 });
 

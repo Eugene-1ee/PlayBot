@@ -63,5 +63,6 @@ module.exports =
             .setThumbnail( 'https://img.youtube.com/vi/' + playlist[ interaction.guild.id ][ 0 ][ 'id' ] + '/mqdefault.jpg' );
 
         interaction.reply( { embeds: [ plistemb ] } );
+        return;
     }
 }

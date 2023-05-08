@@ -20,6 +20,8 @@ module.exports =
             return;
         }
 
+        console.log( process.memoryUsage().heapUsed / 1024 / 1024 );
+
         const currentSong = playlist[ interaction.guild.id ][ 0 ];
         const time = timeConvert( Number( playlist[ interaction.guild.id ][ 0 ].length ) );
         const playtime = timeConvert( parseInt( player[ interaction.guild.id ]._state.playbackDuration / 1000 ) );
@@ -39,5 +41,6 @@ module.exports =
                 } );
 
         await interaction.reply( { embeds : [ embed ] } );
+        return;
     }
 };

@@ -16,5 +16,6 @@ module.exports =
         .setDescription( `${timeTaken}ms`);
         
         await interaction.reply( { embeds: [ Embed ] } );
+        return;
     }
 };

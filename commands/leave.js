@@ -32,6 +32,7 @@ module.exports = {
             // .setColor( '#0x7d3640' )
             .setTitle( ':stop_button:  노래 재생을 멈췄습니다!' );
 
-        return interaction.reply( { embeds: [ stemb ] } );
+        interaction.reply( { embeds: [ stemb ] } );
+        return;
     }
 }

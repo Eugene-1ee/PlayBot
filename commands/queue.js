@@ -16,7 +16,7 @@ module.exports = {
     {
         if ( songcheck( interaction ) )
         {
-            return interaction.reply( { embeds : [ erremb( ':triangular_flag_on_post:  재생 목록을 없어요.' ) ] } );
+            return interaction.reply( { embeds : [ erremb( ':triangular_flag_on_post:  재생 목록이 없어요.' ) ] } );
         }
 
         let a = 0;
@@ -25,7 +25,7 @@ module.exports = {
             a++;
         }
 
-        const totalPages = Math.ceil( a / 10 ) || 1;
+        const totalPages = Math.ceil( ( a - 1 ) / 10 ) || 1;
 
         if ( totalPages == 1 )
         {
@@ -106,7 +106,7 @@ module.exports = {
                     a++;
                 }
 
-                const totalPages = Math.ceil( a / 10 ) || 1;
+                const totalPages = Math.ceil( ( a - 1 ) / 10 ) || 1;
 
                 if ( ButtonInteraction.customId == 0 )
                 {
