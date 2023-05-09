@@ -28,7 +28,7 @@ function skiper( interaction, track, callback )
     {
         const embed = new EmbedBuilder( )
         .setTitle( `모든 음악의 재생이 끝났습니다` )
-        .setDescription( '언제든 불러주세요!' )
+        .setDescription( '언제든 다시 불러주세요!' )
         .setColor( '#535353' );;
     
         interaction.channel.send( { embeds: [ embed ] } );
