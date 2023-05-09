@@ -16,7 +16,7 @@ module.exports =
     {
         if ( musiccheck( interaction ) )
         {
-            interaction.reply( { embeds : [ erremb( '재생 목록이 없습니다.') ] } );
+            interaction.reply( { embeds : [ erremb( '재생 중인 노래가 없습니다!' ) ] } );
             return;
         }
 
@@ -34,7 +34,7 @@ module.exports =
             .setTitle( `Now Playing` )
             .setThumbnail( `https://img.youtube.com/vi/${currentSong.id}/mqdefault.jpg` )
             .setDescription( `[${currentSong.title}](https://www.youtube.com/watch?v=${currentSong.id})\n\n${playtime}  ` + bar + `  ${time}` )
-            .setColor( '#9080a1' )
+            .setColor( '#C7C7C7' )
             .setFooter( { text: currentSong[ 'user' ].username + '#' + currentSong[ 'user' ].discriminator } )
             .setAuthor(
                 {
