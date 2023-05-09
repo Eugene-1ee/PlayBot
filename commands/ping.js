@@ -11,7 +11,7 @@ module.exports =
         const timeTaken = Date.now( ) - interaction.createdTimestamp;
 
         const Embed = new EmbedBuilder( )
-        .setColor( '#4432a8' )
+        .setColor( '#383838' )
         .setTitle( '퐁!' )
         .setDescription( `${timeTaken}ms`);
         
