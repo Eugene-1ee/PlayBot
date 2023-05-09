@@ -1,4 +1,5 @@
 const { play } = require( '../../functions/play.js' );
+const { cleanup } = require( '../../functions/cleanup.js' );
 let { connection, player, playlist, resource, station } = require( '../../functions/val.js' );
 
 module.exports =
@@ -14,12 +15,15 @@ module.exports =
 
             const interaction = error.resource.interaction;
 
-            interaction.channel.send( "너무 긴 영상을 재생했나봐\n오류 발생!" );
+            if ( !playlist[ interaction.guild.id ][ 1 ] )
+            {
+                cleanup( interaction.guild.id );
+            }
 
             return;
         }
-        // else if ( error.message == 'Status code: 403' )
-        // {
+        else if ( error.message == 'Status code: 403' )
+        {
             console.log( '노래 로딩 재시도 프로세스 실행' );
 
             const interaction = error.resource.interaction;
@@ -35,11 +39,11 @@ module.exports =
                 );
                 
             return;
-        // }
-        // else
-        // {
-        //     console.log( error );
-        //     return;
-        // }
+        }
+        else
+        {
+            console.log( error );
+            return;
+        }
     }
 }
