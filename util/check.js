@@ -67,7 +67,7 @@ function usercheck( interaction )
 
     if ( !interaction.member.voice?.channelId )
     {
-        check = new EmbedBuilder()
+        check = new EmbedBuilder( )
             .setTitle( '통화방에 먼저 접속해주세요!' )
             .setDescription( '음악이 채팅으로 나올거라 생각했나봐요?' );
     }
@@ -76,7 +76,7 @@ function usercheck( interaction )
         if ( getVoiceConnection( interaction.guild.id ).joinConfig.channelId
             !== interaction.member.voice.channelId )
         {
-            check = new EmbedBuilder()
+            check = new EmbedBuilder( )
                 .setTitle( '봇과 같은 통화방에 접속해주세요!' )
                 .setDescription( '악용을 막기위해서...' );
         }
