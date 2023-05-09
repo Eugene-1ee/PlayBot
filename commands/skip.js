@@ -47,7 +47,10 @@ module.exports = {
         if ( val > -1 && val < Object.keys( playlist[ interaction.guild.id ] ).length )
         {
 
-            let temp_tilt = { title: playlist[interaction.guild.id][val]['title'], id: playlist[interaction.guild.id][val]['id'] };
+            let temp_tilt = {
+                title: playlist[interaction.guild.id][val]['title'],
+                id: playlist[interaction.guild.id][val]['id'],
+                user: playlist[interaction.guild.id][val]['user'] };
 
             skiper( interaction, val, ( ) =>
             {
@@ -55,8 +58,8 @@ module.exports = {
                     .setColor( '#535353' )
                     .setTitle( `:track_next:  ${ val == 0 ? '스킵' : '해당 트랙이 제거' }되었습니다!` )
                     .setFooter( { text: `Added by ${temp_tilt.user.username}#${temp_tilt.user.discriminator}`, iconURL: temp_tilt.user.displayAvatarURL( ) } )
-                    .setDescription( temp_tilt.title )
-                    .setThumbnail( `[https://img.youtube.com/vi/${temp_tilt.id}/mqdefault.jpg](https://www.youtube.com/watch?v=${temp_tilt.id})` );
+                    .setDescription( `[${temp_tilt.title}](https://www.youtube.com/watch?v=${temp_tilt.id})` )
+                    .setThumbnail( `https://img.youtube.com/vi/${temp_tilt.id}/mqdefault.jpg` );
 
                 interaction.reply( { embeds: [ skiemb ] } )
                 return;
