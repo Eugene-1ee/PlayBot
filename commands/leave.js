@@ -29,8 +29,8 @@ module.exports = {
         cleanup( interaction.guild.id );
 
         const embed = new EmbedBuilder( )
-        .setTitle( `모든 음악의 재생이 끝났습니다` )
-        .setDescription( '언제든 불러주세요!' )
+        .setTitle( `통화방을 나갔습니다.` )
+        .setDescription( '언제든 다시 불러주세요!' )
         .setColor( '#535353' );
     
         await interaction.channel.send( { embeds: [ embed ] } );
