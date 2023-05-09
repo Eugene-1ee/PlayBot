@@ -12,7 +12,7 @@ module.exports =
 
         const Embed = new EmbedBuilder( )
         .setColor( '#383838' )
-        .setTitle( '퐁!' )
+        .setTitle( '핑!' )
         .setDescription( `${timeTaken}ms`);
         
         await interaction.reply( { embeds: [ Embed ] } );
