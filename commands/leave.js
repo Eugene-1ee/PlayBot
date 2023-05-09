@@ -19,19 +19,21 @@ module.exports = {
             return;
         }
         
-        if ( !usercheck( interaction ) )
+        const permit = usercheck( interaction )
+        if ( permit )
         {
-            interaction.reply( '통화방 이슈 발생' );
+            interaction.reply( { embeds: [permit] } );
             return;
         }
 
         cleanup( interaction.guild.id );
 
-        const stemb = new EmbedBuilder( )
-            // .setColor( '#0x7d3640' )
-            .setTitle( ':stop_button:  노래 재생을 멈췄습니다!' );
-
-        interaction.reply( { embeds: [ stemb ] } );
+        const embed = new EmbedBuilder( )
+        .setTitle( `모든 음악의 재생이 끝났습니다` )
+        .setDescription( '언제든 불러주세요!' )
+        .setColor( '#535353' );
+    
+        await interaction.channel.send( { embeds: [ embed ] } );
         return;
     }
 }
