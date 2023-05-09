@@ -27,6 +27,12 @@ module.exports =
             return;
         }
 
+        if ( !playlist[ interaction.guild.id ][ 1 ] )
+        {
+            interaction.reply( { embeds: [ erremb( '섞을 노래가 없습니다!' ) ] });
+            return;
+        }
+
         let shuffled = Object.keys( playlist[ interaction.guild.id ] );
         shuffled = shuffled.sort( ( ) => Math.random( ) - 0.5 );
 
@@ -49,7 +55,7 @@ module.exports =
 
         let res = '';
 
-        let temp_unter = 1, song = 0;
+        let temp_unter = 1, song = 0, count = 0;
 
         for ( let unter in playlist[ interaction.guild.id ] )
         {
@@ -57,23 +63,23 @@ module.exports =
             {
                 song++;
             }
-            else if( unter !== 0 )
+            else if( count !== 0 )
             {
-                res += '**`' + temp_unter + '`** | ' + playlist[ interaction.guild.id ][ unter ][ 'title' ] + '\n';
+                res += '**`' + temp_unter + '`** ' + playlist[ interaction.guild.id ][ unter ][ 'title' ] + '\n';
                 temp_unter++;
             }
+            count++;
         }
 
         if ( song > 0 )
         {
-            res += `\n+${song}개의 노래`;
+            res += `\n**..외 ${song}개의 노래**`;
         }
 
         const plistemb = new EmbedBuilder( )
-        // .setColor('#0x7d3640')
-            .setTitle( ':twisted_rightwards_arrows:  재생 순서를 변경했습니다.' )
-            .setDescription( res )
-            .setThumbnail( 'https://img.youtube.com/vi/' + playlist[ interaction.guild.id ][ 0 ][ 'id' ] + '/mqdefault.jpg' );
+            .setColor( '#D8D8D8' )
+            .setTitle( `:twisted_rightwards_arrows:  노래 ${count - 1}개의 재생 순서를 변경했습니다.` )
+            .setDescription( res );
 
         interaction.reply( { embeds: [ plistemb ] } );
         return;
