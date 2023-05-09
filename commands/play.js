@@ -26,7 +26,7 @@ module.exports =
 		.setDescription( '노래를 재생하거나 재생목록에 추가합니다.' )
         .addStringOption( ( option ) =>
         option.setName( '옵션' )
-            .setDescription( '유튜브 영상의 URL 또는 제목을 입력해주세요. 재생목록도 가능합니다.' )
+            .setDescription( '유튜브 영상이나 재생목록의 URL 또는 제목을 입력해주세요.' )
             .setRequired( true ) ),
     
 	async execute( interaction )
@@ -63,7 +63,7 @@ module.exports =
                         let data = await ytdl.getBasicInfo( 'https://youtu.be/' + val );
 
                         await interaction.reply( { embeds: [ listemb ] } );
-                        await interaction.editReply({ content: `<:simsimcoin:981466375803531295>**${ data.videoDetails.title }** 대기열에 추가됨!`, embeds: [ ] } );
+                        await interaction.editReply({ content: `:musical_note:  **${ data.videoDetails.title }** 대기열에 추가됨!`, embeds: [ ] } );
 
                         val_to_dt( val, interaction );
                         return;
@@ -107,7 +107,7 @@ module.exports =
                         .setTitle( ':repeat:  URL을 불러오고 있어요.' );
                     
                     await interaction.reply( { embeds: [ listemb ] } );
-                    await interaction.editReply( { content: `<:simsimcoin:981466375803531295>**${ data.videoDetails.title }** 대기열에 추가됨!`, embeds: [ ] } );
+                    await interaction.editReply( { content: `:musical_note:  **${ data.videoDetails.title }** 대기열에 추가됨!`, embeds: [ ] } );
 
                     val_to_dt( val, interaction );
                     return;
@@ -168,7 +168,7 @@ module.exports =
     
                         if ( over > 0 )
                         {
-                            res += `\n**${ over }개의 노래 더 있음...**\n`
+                            res += `\n**..외 ${ over }개의 노래**\n`
                         }    
                         if ( song > 0 )
                         {
@@ -211,7 +211,7 @@ module.exports =
                 let res = '';
                 for ( let unter in videos )
                 {
-                    res += '**`' + ( parseInt( unter ) + 1 ) + '`** | ' + videos[ unter ].snippet.title + '\n';
+                    res += '**`' + ( parseInt( unter ) + 1 ) + '`**  ' + videos[ unter ].snippet.title + '\n';
                 }
 
                 const embed = new EmbedBuilder()
@@ -248,7 +248,7 @@ module.exports =
                             {
                                 const data = await ytdl.getBasicInfo( 'https://youtu.be/' + videos[ response.customId ].id.videoId );
 
-                                interaction.editReply( { content: `<:simsimcoin:981466375803531295>**${ data.videoDetails.title }** 대기열에 추가됨!`, embeds: [ ], components: [ ] } );
+                                interaction.editReply( { content: `:musical_note:  **${ data.videoDetails.title }** 대기열에 추가됨!`, embeds: [ ], components: [ ] } );
 
                                 adder( interaction, data.videoDetails.title, data.videoDetails.videoId, data.videoDetails.lengthSeconds, data.videoDetails.author, false );
                                 return;
