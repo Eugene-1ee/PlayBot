@@ -28,14 +28,23 @@ module.exports =
         let bar = '▬▬▬▬▬▬▬▬▬▬▬▬';
         bar = bar.substring( 0, num ) + ':radio_button:' + bar.substring( num + 1 );
 
-        console.log( ( process.memoryUsage().heapUsed / 1024 / 1024 ) + 'mb' );
+        let mark = ':notes:';
 
-        const embed = new EmbedBuilder()
-            .setTitle( `Now Playing` )
+        if ( station[ interaction.guild.id ] == 'repeat' )
+        {
+            mark = ':repeat:';
+        }
+        else if ( station[ interaction.guild.id ] )
+        {
+            mark = ':fire:';
+        }
+
+        const embed = new EmbedBuilder( )
+            .setTitle( `${mark}  Now Playing` )
             .setThumbnail( `https://img.youtube.com/vi/${currentSong.id}/mqdefault.jpg` )
             .setDescription( `[${currentSong.title}](https://www.youtube.com/watch?v=${currentSong.id})\n\n${playtime}  ` + bar + `  ${time}` )
             .setColor( '#C7C7C7' )
-            .setFooter( { text: currentSong[ 'user' ].username + '#' + currentSong[ 'user' ].discriminator } )
+            .setFooter( { text: `Added by ${currentSong.user.username}#${currentSong.user.discriminator}`, iconURL: currentSong.user.displayAvatarURL( ) } )
             .setAuthor(
                 {
                     name : currentSong.author.name,
