@@ -75,7 +75,7 @@ module.exports = {
                 const row = new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
                     .setCustomId( 'Timeout' )
-                    .setLabel( `Expired after 60 seconds` )
+                    .setLabel( `Expired after 30 seconds` )
                     .setStyle( ButtonStyle.Secondary )
                     .setDisabled( true ) );
 
@@ -95,7 +95,7 @@ module.exports = {
             const filter = ( ButtonInteraction ) => ButtonInteraction.user.id === interaction.user.id;
 
             const collector = interaction.channel.createMessageComponentCollector(
-                { filter, time: 60000 } );
+                { filter, time: 30000 } );
 
             collector.on( 'collect', async ( ButtonInteraction ) =>
             {
@@ -151,7 +151,7 @@ module.exports = {
                 const row = new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
                     .setCustomId( 'Timeout' )
-                    .setLabel( `Expired after 60 seconds` )
+                    .setLabel( `Expired after 30 seconds` )
                     .setStyle( ButtonStyle.Secondary )
                     .setDisabled( true ) );
 
