@@ -13,7 +13,7 @@ module.exports = {
 		.setDescription( '재생중인 영상을 스킵해요.' )
         .addStringOption( ( option ) =>
             option.setName( '번호' )
-                .setDescription( '트랙 번호를 입력해주세요. 해당 트랙을 스킵해요.' )
+                .setDescription( '트랙 번호를 입력하면 대기열에서 해당 트랙을 제거해요.' )
                 .setRequired( false ) ),
     
 	async execute( interaction )
@@ -52,10 +52,11 @@ module.exports = {
             skiper( interaction, val, ( ) =>
             {
                 const skiemb = new EmbedBuilder( )
-                // .setColor('#0x7d3640')
-                    .setTitle( ':track_next:  스킵되었습니다!' )
+                    .setColor( '#535353' )
+                    .setTitle( `:track_next:  ${ val == 0 ? '스킵' : '해당 트랙이 제거' }되었습니다!` )
+                    .setFooter( { text: `Added by ${temp_tilt.user.username}#${temp_tilt.user.discriminator}`, iconURL: temp_tilt.user.displayAvatarURL( ) } )
                     .setDescription( temp_tilt.title )
-                    .setThumbnail( 'https://img.youtube.com/vi/' + temp_tilt.id + '/mqdefault.jpg' );
+                    .setThumbnail( `[https://img.youtube.com/vi/${temp_tilt.id}/mqdefault.jpg](https://www.youtube.com/watch?v=${temp_tilt.id})` );
 
                 interaction.reply( { embeds: [ skiemb ] } )
                 return;
@@ -63,7 +64,7 @@ module.exports = {
         }
         else
         {
-            interaction.reply( { embeds: [ erremb( ':triangular_flag_on_post:  ' + (val) + '번 트랙을 찾지 못했습니다!\n재생목록 에서 트랙 번호를 다시 한번 확인 해주세요!' ) ] } );
+            interaction.reply( { embeds: [ norpembed( ':grey_question:  ' + ( val ) + '번 트랙을 찾지 못했습니다!', '대기열에서 트랙 번호를 다시 한번 확인 해주세요!' ) ] } );
             return;
         }
     }
