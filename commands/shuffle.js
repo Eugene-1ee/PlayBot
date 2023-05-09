@@ -10,19 +10,20 @@ module.exports =
 {
 	data: new SlashCommandBuilder( )
 		.setName( '셔플' )
-		.setDescription( '재생목록에 담긴 영상의 재생 순서를 섞어요.' ),
+		.setDescription( '대기열에 있는 영상의 재생 순서를 섞습니다.' ),
     
 	async execute( interaction )
     {
         if ( songcheck( interaction ) )
         {
-            interaction.reply( { embeds: [ erremb( '재생 중인 노래가 없습니다!\n셔플은 노래를 재생하는 중에만 할 수 있습니다.' ) ] });
+            interaction.reply( { embeds: [ erremb( '재생 중인 노래가 없습니다!' ) ] });
             return;
         }
 
-        if ( !usercheck( interaction ) )
+        const permit = usercheck( interaction )
+        if ( permit )
         {
-            interaction.reply( '통화방 이슈 발생' );
+            interaction.reply( { embeds: [permit] } );
             return;
         }
 
@@ -48,12 +49,24 @@ module.exports =
 
         let res = '';
 
-        let temp_unter = 1;
+        let temp_unter = 1, song = 0;
 
         for ( let unter in playlist[ interaction.guild.id ] )
         {
-            res += '**`' + temp_unter + '`** | ' + playlist[ interaction.guild.id ][ unter ][ 'title' ] + '\n';
-            ++temp_unter;
+            if ( temp_unter > 20 )
+            {
+                song++;
+            }
+            else if( unter !== 0 )
+            {
+                res += '**`' + temp_unter + '`** | ' + playlist[ interaction.guild.id ][ unter ][ 'title' ] + '\n';
+                temp_unter++;
+            }
+        }
+
+        if ( song > 0 )
+        {
+            res += `\n+${song}개의 노래`;
         }
 
         const plistemb = new EmbedBuilder( )
