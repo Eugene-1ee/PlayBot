@@ -67,7 +67,7 @@ async function adder( interaction, title, id, length, author, isList )
         if ( !station[ interaction.guild.id ] )
         {
             const adderemb = new EmbedBuilder( )
-            // .setColor('#0x7d3640')
+                .setColor('#737373')
                 .setTitle( '**|**  재생목록에 추가했습니다!' )
                 .setDescription( `[${title}](https://www.youtube.com/watch?v=${id})` )
                 .setThumbnail( 'https://img.youtube.com/vi/' + id + '/mqdefault.jpg' )
