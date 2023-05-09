@@ -10,7 +10,7 @@ let { connection, player, playlist, resource, station } = require( '../functions
 function erremb( message )
 {
     const errembed = new EmbedBuilder( )
-    // .setColor('#0x7d3640')
+        .setColor( '#000000' )
         .setTitle( message );
 
     return errembed;
@@ -25,7 +25,7 @@ function erremb( message )
 function norpembed( title, sub )
 {
     const norpbed = new EmbedBuilder( )
-    // .setColor('#0x7d3640')
+        .setColor( '#000000' )
         .setTitle( title )
         .setDescription( sub );
 
@@ -40,24 +40,24 @@ function norpembed( title, sub )
  */
 function queue( interaction, page )
 {
-    let queue = [];
+    let queue = [ ];
     let count = 0;
 
-    for ( let unter in playlist[interaction.guild.id] )
+    for ( let unter in playlist[ interaction.guild.id ] )
     {
         queue[ count ] =
         {
-            'title': `${playlist[interaction.guild.id][unter]['title']}`,
-            'id': `${playlist[interaction.guild.id][unter]['id']}`,
-            'length': `${playlist[interaction.guild.id][unter]['length']}`,
-            'user': `${playlist[interaction.guild.id][unter]['user']}`,
+            'title': `${ playlist[ interaction.guild.id ][ unter ][ 'title' ] }`,
+            'id': `${ playlist[ interaction.guild.id ][ unter ][ 'id' ] }`,
+            'length': `${ playlist[ interaction.guild.id ][ unter ][ 'length' ] }`,
+            'user': `${ playlist[ interaction.guild.id ][ unter ][ 'user' ] }`,
         };
 
         count++;
     }
     
-    const currentSong = queue[0];
-    const currentTime = timeConvert( Number(currentSong.length) - parseInt( player[interaction.guild.id]._state.playbackDuration / 1000 ) );
+    const currentSong = queue[ 0 ];
+    const currentTime = timeConvert( Number( currentSong.length ) - parseInt( player[ interaction.guild.id ]._state.playbackDuration / 1000 ) );
     
     if ( queue.length == 1 ) //When there are no songs in the queue:
     {
@@ -65,7 +65,7 @@ function queue( interaction, page )
         .setTitle( `Music Queue (0 tracks)` )
         .setDescription( `**Now Playing**\n[${currentSong.title}](https://www.youtube.com/watch?v=${currentSong.id}) ${currentTime} left\n-${currentSong.user}` )
         .setThumbnail( `https://img.youtube.com/vi/${currentSong.id}/mqdefault.jpg` )
-        // .setColor( '#9080a1' );
+        .setColor( '#C7C7C7' );
 
         return embed;
     }
@@ -84,7 +84,7 @@ function queue( interaction, page )
             .setTitle( `Music Queue (${queue.length - 1} tracks)` )
             .setDescription( `**Now Playing**\n[${currentSong.title}](https://www.youtube.com/watch?v=${currentSong.id}) ${currentTime} left\n${currentSong.user}\n\n${queueString}` )
             .setThumbnail( `https://img.youtube.com/vi/${currentSong.id}/mqdefault.jpg` )
-        // .setColor( '#9080a1' );
+            .setColor( '#C7C7C7' );
 
         if ( totalPages == 1 )
         {
