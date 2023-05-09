@@ -66,10 +66,10 @@ async function play( interaction, title, id, length, author, user, next )
     }
     
     const playemb = new EmbedBuilder( )
-    // .setColor('#0x7d3640')
+        .setColor( '#EAEAEA' )
         .setThumbnail( 'https://img.youtube.com/vi/' + id + '/mqdefault.jpg' )
         .setDescription( `[${title}](https://www.youtube.com/watch?v=${id}) \`\`${timeConvert(length)}\`\`` )
-        .setFooter( { text: `Added by ${user.username}#${user.discriminator}` } );;
+        .setFooter( { text: `Added by ${user.username}#${user.discriminator}`, iconURL: user.displayAvatarURL( ) } );
 
     if ( !station[ interaction.guild.id ] )
     {
