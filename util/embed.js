@@ -86,11 +86,7 @@ function queue( interaction, page )
             .setThumbnail( `https://img.youtube.com/vi/${currentSong.id}/mqdefault.jpg` )
             .setColor( '#C7C7C7' );
 
-        if ( totalPages == 1 )
-        {
-            embed.setFooter( { text: `${queue.length} songs` } );
-        }
-        else
+        if ( totalPages !== 1 )
         {
             embed.setFooter( { text: `Page ${page + 1}/${totalPages}` } );
         }
