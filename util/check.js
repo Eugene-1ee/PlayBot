@@ -63,21 +63,22 @@ function musiccheck( interaction )
  */
 function usercheck( interaction )
 {
-    let check = false;
+    let check;
 
-    if ( interaction.member.voice?.channelId )
+    if ( !interaction.member.voice?.channelId )
     {
-        if ( getVoiceConnection( interaction.guildId ) )
+        check = new EmbedBuilder()
+            .setTitle( '통화방에 먼저 접속해주세요!' )
+            .setDescription( '음악이 채팅으로 나올거라 생각했나봐요?' );
+    }
+    else if ( getVoiceConnection( interaction.guildId ) )
+    {
+        if ( getVoiceConnection( interaction.guild.id ).joinConfig.channelId
+            !== interaction.member.voice.channelId )
         {
-            if ( getVoiceConnection( interaction.guild.id ).joinConfig.channelId
-                == interaction.member.voice.channelId )
-            {
-                check = true;
-            }
-        }
-        else
-        {
-            check = true;
+            check = new EmbedBuilder()
+                .setTitle( '봇과 같은 통화방에 접속해주세요!' )
+                .setDescription( '악용을 막기위해서...' );
         }
     }
 
