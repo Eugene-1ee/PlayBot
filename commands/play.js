@@ -33,43 +33,44 @@ module.exports =
     {
         let val = interaction.options.data[0].value;
 
-        if ( !usercheck( interaction ) )
+        const permit = usercheck( interaction )
+        if ( permit )
         {
-            interaction.reply( '통화방 이슈 발생' );
+            interaction.reply( { embeds: [ permit ] } );
             return;
         }
 
         //URL
         if ( val.startsWith( 'http' ) )
         {
-            if ( val.search('v=') > -1 )
+            if ( val.search( 'v=' ) > -1 )
             {
-                val = val.split('v=')[1];
+                val = val.split( 'v=' )[ 1 ];
 
-                if ( val.search('&') > -1 )
+                if ( val.search( '&' ) > -1 )
                 {
-                    val = val.split('&')[0];
+                    val = val.split( '&' )[ 0 ];
                 }
 
                 if ( ytdl.validateID( val ) )
                 {
                     const listemb = new EmbedBuilder( )
-                    // .setColor('#6b26ff')
-                        .setTitle( ':crystal_ball:  URL을 불러오고 있어요.' );
+                        .setColor( '#FFFFFF' )
+                        .setTitle( ':repeat:  URL을 불러오고 있어요.' );
 
                     try
                     {
                         let data = await ytdl.getBasicInfo( 'https://youtu.be/' + val );
 
                         await interaction.reply( { embeds: [ listemb ] } );
-                        await interaction.editReply({ content: `**${data.videoDetails.title}** 등록됨!`, embeds: [] } );
+                        await interaction.editReply({ content: `<:simsimcoin:981466375803531295>**${ data.videoDetails.title }** 대기열에 추가됨!`, embeds: [ ] } );
 
                         val_to_dt( val, interaction );
                         return;
                     }
                     catch ( error )
                     {
-                        interaction.reply( '재생할 수 없는 영상이야!' );
+                        interaction.reply( '재생할 수 없는 영상입니다.' );
                         return;
                     }
                 }
@@ -79,13 +80,13 @@ module.exports =
                     return;
                 }
             }
-            else if ( val.search('youtu.be/') > -1 )
+            else if ( val.search( 'youtu.be/' ) > -1 )
             {
-                val = val.split('youtu.be/')[1];
+                val = val.split( 'youtu.be/' )[ 1 ];
 
-                if ( val.search('=') > -1 )
+                if ( val.search( '=' ) > -1 )
                 {
-                    val = val.split('?')[0];
+                    val = val.split( '?' )[ 0 ];
                 }
 
                 if ( ytdl.validateID( val ) )
@@ -98,15 +99,15 @@ module.exports =
                     }
                     catch ( error )
                     {
-                        return interaction.reply( '재생할 수 없는 영상이야!' );
+                        return interaction.reply( '재생할 수 없는 영상입니다.' );
                     }
 
                     const listemb = new EmbedBuilder( )
-                    // .setColor('#6b26ff')
-                        .setTitle( ':crystal_ball:  URL을 불러오고 있어요.' );
+                        .setColor( '#FFFFFF' )
+                        .setTitle( ':repeat:  URL을 불러오고 있어요.' );
                     
                     await interaction.reply( { embeds: [ listemb ] } );
-                    await interaction.editReply({ content: `**${data.videoDetails.title}** 등록됨!`, embeds: [] } );
+                    await interaction.editReply( { content: `<:simsimcoin:981466375803531295>**${ data.videoDetails.title }** 대기열에 추가됨!`, embeds: [ ] } );
 
                     val_to_dt( val, interaction );
                     return;
@@ -145,11 +146,11 @@ module.exports =
                         {
                             try
                             {
-                                const data = await ytdl.getBasicInfo( 'https://youtu.be/' + list[unter].id );
+                                const data = await ytdl.getBasicInfo( `https://youtu.be/${ list[ unter ].id }` );
 
-                                if ( res.length <= 1500 )
+                                if ( orig <= 20 )
                                 {
-                                    res += '**`' + orig + '`**  ' + list[unter].title + `   \`\`${timeConvert( list[unter].durationSec )}\`\`` + '\n';
+                                    res += '**`' + orig + '`**  ' + list[ unter ].title + `   \`\`${ timeConvert( data.videoDetails.lengthSeconds ) }\`\`` + '\n';
                                     ++orig;
                                 }
                                 else
@@ -157,7 +158,7 @@ module.exports =
                                     over++;
                                 }
 
-                                await adder( interaction, data.videoDetails.title, data.videoDetails.id, data.videoDetails.lengthSeconds, data.videoDetails.author, true );
+                                await adder( interaction, list[ unter ].title, data.videoDetails.videoId, data.videoDetails.lengthSeconds, data.videoDetails.author, true );
                             }
                             catch ( err )
                             {
@@ -167,18 +168,18 @@ module.exports =
     
                         if ( over > 0 )
                         {
-                            res += `\n**${over}개의 노래 더 있음...**\n`
+                            res += `\n**${ over }개의 노래 더 있음...**\n`
                         }    
                         if ( song > 0 )
                         {
-                            res += `\n**${song}개의 노래가 재생 불가합니다.**`
+                            res += `\n**${ song }개의 노래가 재생 불가합니다.**`
                         }
 
                         const listemb = new EmbedBuilder( )
-                        // .setColor('#0x7d3640')
-                            .setTitle( `:white_check_mark: ${orig + over - 1}개의 노래를 대기열에 추가했습니다!` )
+                            .setColor( '#FFFFFF' )
+                            .setTitle( `:white_check_mark: ${ orig + over - 1 }개의 노래를 대기열에 추가했습니다!` )
                             .setDescription( res )
-                            .setThumbnail( 'https://img.youtube.com/vi/' + list[0].id + '/mqdefault.jpg' );
+                            .setThumbnail( `https://img.youtube.com/vi/${ list[ 0 ].id }/mqdefault.jpg` );
 
                         await interaction.editReply( { embeds: [ listemb ] } );
                         return;
@@ -210,17 +211,17 @@ module.exports =
                 let res = '';
                 for ( let unter in videos )
                 {
-                    res += '**`' + ( parseInt(unter) + 1 ) + '`** | ' + videos[unter].snippet.title + '\n';
+                    res += '**`' + ( parseInt( unter ) + 1 ) + '`** | ' + videos[ unter ].snippet.title + '\n';
                 }
 
-                let src = new EmbedBuilder()
-                // .setColor('#0x7d3640')
+                const embed = new EmbedBuilder()
+                    .setColor( '#FFFFFF' )
                     .setAuthor( { name: '검색 결과', iconURL: interaction.user.displayAvatarURL( ) } )
                     .setDescription( res )
                     .setFooter( { text: '트랙 번호에 해당하는 버튼을 눌러주세요!' } );
 
 
-                interaction.reply( { embeds: [src], components: [searchButton(interaction)[0], searchButton(interaction)[1], searchButton(interaction)[2]] } ).then( async ( ) =>
+                interaction.reply( { embeds: [ embed ], components: [ searchButton( interaction )[ 0 ], searchButton( interaction )[ 1 ], searchButton( interaction )[ 2 ] ] } ).then( async ( ) =>
                 {
                     let check;
 
@@ -229,45 +230,45 @@ module.exports =
                         filter: m => m.user.id === interaction.user.id,
                         max: 1,
                         time: 30000,
-                        errors: ['time']
-                    }).then( async ( response ) =>
+                        errors: [ 'time' ]
+                    } ).then( async ( response ) =>
                     {
                         check = true;
 
                         if ( response.customId == 'cancel' )
                         {
-                            return interaction.editReply( { embeds: [ norpembed( '곡 선택이 취소되었습니다!', '잘못 검색한건감' ) ], components: [] } );
+                            return interaction.editReply( { embeds: [ norpembed( '곡 선택이 취소되었습니다!', '잘못 검색한건가요?' ) ], components: [ ] } );
                         }
 
-                        if ( parseInt(response.customId) > 0 && parseInt(response.customId) < 11 )
+                        if ( parseInt( response.customId ) > 0 && parseInt( response.customId ) < 11 )
                         {
                             response.customId = parseInt( response.customId ) - 1;
                             
                             try
                             {
-                                const data = await ytdl.getBasicInfo( 'https://youtu.be/' + videos[response.customId].id.videoId );
+                                const data = await ytdl.getBasicInfo( 'https://youtu.be/' + videos[ response.customId ].id.videoId );
 
-                                interaction.editReply( { content: `**${data.videoDetails.title}** 등록됨!`, embeds: [], components: [] } );
+                                interaction.editReply( { content: `<:simsimcoin:981466375803531295>**${ data.videoDetails.title }** 대기열에 추가됨!`, embeds: [ ], components: [ ] } );
 
-                                adder( interaction, data.videoDetails.title, data.videoDetails.id, data.videoDetails.lengthSeconds, data.videoDetails.author, false );
+                                adder( interaction, data.videoDetails.title, data.videoDetails.videoId, data.videoDetails.lengthSeconds, data.videoDetails.author, false );
                                 return;
                             }
                             catch ( error )
                             {
-                                interaction.editReply( { content: '재생할 수 없는 영상이야!', embeds: [], components: [] } );
+                                interaction.editReply( { content: '재생할 수 없는 영상입니다.', embeds: [ ], components: [ ] } );
                                 return;
                             }
                         }
                         else
                         {
-                            interaction.editReply( { embeds: [ norpembed( '곡 선택이 취소되었습니다!', '올바르지 않은 수가 입력되었습니다. 1 ~ 10 안으로 선택 해주세요.' ) ], components: [] } );
+                            interaction.editReply( { embeds: [ norpembed( '곡 선택이 취소되었습니다!', '올바르지 않은 버튼을 눌렀...어케했????' ) ], components: [ ] } );
                             return;
                         }
                     } ).catch( ( err ) =>
                     {
                         if ( !check )
                         {
-                            interaction.editReply( { embeds: [ norpembed( '곡 선택이 취소되었습니다!', '곡을 선택하는데 너무 오랜 시간이 걸렸습니다.' ) ], components: [] } );
+                            interaction.editReply( { embeds: [ norpembed( '곡 선택이 취소되었습니다!', '곡을 선택하는데 너무 오랜 시간이 걸렸습니다.' ) ], components: [ ] } );
                         }
                         return;
                     } );
