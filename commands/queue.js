@@ -10,13 +10,13 @@ const { songcheck } = require('../util/check.js');
 module.exports = {
 	data: new SlashCommandBuilder( )
 		.setName( '대기열' )
-		.setDescription( '재생 목록과 트랙 번호를 볼 수 있아요.' ),
+		.setDescription( '대기열을 볼 수 있습니다.' ),
     
 	async execute( interaction )
     {
         if ( songcheck( interaction ) )
         {
-            return interaction.reply( { embeds : [ erremb( '재생 목록이 없어요.' ) ] } );
+            return interaction.reply( { embeds : [ erremb( '재생 중인 노래가 없습니다!' ) ] } );
         }
 
         let a = 0;
@@ -45,7 +45,7 @@ module.exports = {
             const filter = ( ButtonInteraction ) => ButtonInteraction.user.id === interaction.user.id;
 
             const collector = interaction.channel.createMessageComponentCollector(
-                { filter, time: 60000 } );
+                { filter, time: 30000 } );
                 
             collector.on( 'collect', async ( ButtonInteraction ) => {
                 ButtonInteraction.deferUpdate();
