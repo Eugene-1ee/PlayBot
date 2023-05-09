@@ -8,7 +8,7 @@ let { connection, player, playlist, resource, station } = require( '../functions
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName( '정지' )
-		.setDescription( '음악을 일시정지합니다. 재실행시 재개합니다.' ),
+		.setDescription( '음악을 일시정지합니다. 다시 실행하면 재개합니다.' ),
     
 	async execute( interaction )
     {
@@ -18,21 +18,31 @@ module.exports = {
             return;
         }
 
-        if ( !usercheck( interaction ) )
+        const permit = usercheck( interaction )
+        if ( permit )
         {
-            interaction.reply( '통화방 이슈 발생' );
+            interaction.reply( { embeds: [ permit ] } );
             return;
         }
 
         if ( player[interaction.guild.id].pause( ) )
         {
-            interaction.reply( '일시정지됨' );
+            const embed = new EmbedBuilder( )
+            .setColor( '#383838' )
+            .setTitle( '일시정지했습니다!' );
+
+            interaction.reply( { embeds: [ embed ] } );
             return;
         }
         else
         {
             player[interaction.guild.id].unpause( );
-            interaction.reply( '재개됨' );
+            
+            const embed = new EmbedBuilder( )
+            .setColor( '#383838' )
+            .setTitle( '재개했습니다!' );
+
+            interaction.reply( { embeds: [ embed ] } );
             return;
         }
     }
