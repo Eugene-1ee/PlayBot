@@ -10,7 +10,7 @@ const { songcheck, usercheck } = require('../util/check.js');
 module.exports = {
 	data: new SlashCommandBuilder( )
 		.setName( '스테이션' )
-		.setDescription( '유튜브 추천 동영상을 기반으로 비슷한 영상을 계속 재생해요.' )
+		.setDescription( '재생중인 동영상을 기반으로 비슷한 영상을 계속 재생해요.' )
         .addSubcommand( subcommand => subcommand
             .setName( '켜기' )
             .setDescription( '스테이션을 켭니다.' ) )
@@ -32,13 +32,14 @@ module.exports = {
 
         if ( songcheck( interaction ) )
         {
-            interaction.reply( { embeds: [ erremb( '재생 중인 노래가 없습니다!\n재생 중인 노래가 없어 스테이션 기능을 활성화 하지 못했습니다.' ) ] } );
+            interaction.reply( { embeds: [ erremb( '재생 중인 노래가 없습니다!' ) ] } );
             return;
         }
 
-        if ( !usercheck( interaction ) )
+        const permit = usercheck( interaction )
+        if ( permit )
         {
-            interaction.reply( '통화방 이슈 발생' );
+            interaction.reply( { embeds: [permit] } );
             return;
         }
 
