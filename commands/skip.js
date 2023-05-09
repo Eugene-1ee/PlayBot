@@ -30,9 +30,10 @@ module.exports = {
             return interaction.reply( { embeds: [ erremb( '재생 중인 노래가 없습니다!' ) ] } );
         }
 
-        if ( !usercheck( interaction ) )
+        const permit = usercheck( interaction )
+        if ( permit )
         {
-            interaction.reply( '통화방 이슈 발생' );
+            interaction.reply( { embeds: [permit] } );
             return;
         }
 
