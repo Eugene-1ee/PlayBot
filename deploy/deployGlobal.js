@@ -4,7 +4,7 @@ require( 'dotenv' ).config( );
 
 const commands = [ ];
 const commandFiles = fs.readdirSync( './commands' ).filter( file => file.endsWith( '.js' ) );
-
+ 
 for ( const file of commandFiles )
 {
     console.log( `\n${file} Registering on Global...` );
