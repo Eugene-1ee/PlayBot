@@ -1,5 +1,20 @@
 # play bot - v1.4
 
-This is the source code of PlayBot-v1.4
+개판 of 개판의 재생이에 오신걸 환영합니다!
+코드도 개판
+성능도 개판
 
-node --no-warnings .
+이 코드를 참고하실거라면 열받아도 참고 참고하십쇼 ^^;
+
+먼저,
+node .\deploy\deployGloal.js
+를 해준 후
+node .\index.js
+를 해주세요!
+
+.env
+clientId =
+guildId =
+TOKEN =
+Youtube_Api =
+유튜브API는 v3 받아오심 됩니다
