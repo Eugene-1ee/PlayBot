@@ -1,6 +1,6 @@
 # play bot - v1.4
 
-개판 of 개판의 재생이에 오신걸 환영합니다!
+개판 of 개판 유튜브 재생봇 재생이에 오신걸 환영하지 않습니다!
 코드도 개판
 성능도 개판
 
@@ -12,9 +12,9 @@ node .\deploy\deployGloal.js
 node .\index.js
 를 해주세요!
 
+유튜브API는 v3 받아오심 됩니다
 .env
 clientId =
 guildId =
 TOKEN =
 Youtube_Api =
-유튜브API는 v3 받아오심 됩니다
