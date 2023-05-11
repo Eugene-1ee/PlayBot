@@ -42,6 +42,7 @@ async function play( interaction, title, id, length, author, user, next )
 
     player[ interaction.guild.id ].play( resource[ interaction.guild.id ] );
 
+    // 에러 발생했을때 대처방법 생각하기
     player[ interaction.guild.id ].once( AudioPlayerStatus.Idle, async ( ) =>
     {
         if ( station[ interaction.guild.id ] === 'repeat' )
