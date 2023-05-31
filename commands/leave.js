@@ -33,7 +33,7 @@ module.exports = {
         .setDescription( '언제든 다시 불러주세요!' )
         .setColor( '#535353' );
     
-        await interaction.channel.send( { embeds: [ embed ] } );
+        await interaction.reply( { embeds: [ embed ] } );
         return;
     }
 }
