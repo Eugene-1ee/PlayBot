@@ -70,7 +70,7 @@ async function play( interaction, title, id, length, author, user, next )
         .setColor( '#EAEAEA' )
         .setThumbnail( 'https://img.youtube.com/vi/' + id + '/mqdefault.jpg' )
         .setDescription( `[${title}](https://www.youtube.com/watch?v=${id}) \`\`${timeConvert(length)}\`\`` )
-        .setFooter( { text: `Added by ${user.username}#${user.discriminator}`, iconURL: user.displayAvatarURL( ) } );
+        .setFooter( { text: `Added by @${user.username}`, iconURL: user.displayAvatarURL( ) } );
 
     if ( !station[ interaction.guild.id ] )
     {

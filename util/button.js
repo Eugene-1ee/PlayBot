@@ -23,7 +23,7 @@ function Buttonpage2( interaction, now )
             .setStyle( ButtonStyle.Secondary ),
             new ButtonBuilder()
             .setCustomId( 'InteractionUserName' )
-            .setLabel( `Requested by ${interaction.user.username + '#' + interaction.user.discriminator}` )
+            .setLabel( `Requested by @${interaction.user.username}` )
             .setStyle( ButtonStyle.Secondary )
             .setDisabled( true ) );
     }
@@ -41,7 +41,7 @@ function Buttonpage2( interaction, now )
             .setDisabled( true ),
             new ButtonBuilder()
             .setCustomId( 'InteractionUserName' )
-            .setLabel( `Requested by ${interaction.user.username + '#' + interaction.user.discriminator}` )
+            .setLabel( `Requested by @${interaction.user.username}` )
             .setStyle( ButtonStyle.Secondary )
             .setDisabled( true ) );
     }
@@ -81,7 +81,7 @@ function pagemore( interaction, now, max )
             .setStyle( ButtonStyle.Secondary ),
             new ButtonBuilder()
             .setCustomId( 'InteractionUserName' )
-            .setLabel( `Requested by ${interaction.user.username + '#' + interaction.user.discriminator}` )
+            .setLabel( `Requested by @${interaction.user.username}` )
             .setStyle( ButtonStyle.Secondary )
             .setDisabled( true ) );
     }
@@ -108,7 +108,7 @@ function pagemore( interaction, now, max )
             .setDisabled( true ),
             new ButtonBuilder()
             .setCustomId( 'InteractionUserName' )
-            .setLabel( `Requested by ${interaction.user.username + '#' + interaction.user.discriminator}` )
+            .setLabel( `Requested by @${interaction.user.username}` )
             .setStyle( ButtonStyle.Secondary )
             .setDisabled( true ) );
     }
@@ -133,7 +133,7 @@ function pagemore( interaction, now, max )
             .setStyle( ButtonStyle.Secondary ),
             new ButtonBuilder()
             .setCustomId( 'InteractionUserName' )
-            .setLabel( `Requested by ${interaction.user.username + '#' + interaction.user.discriminator}` )
+            .setLabel( `Requested by @${interaction.user.username}` )
             .setStyle( ButtonStyle.Secondary )
             .setDisabled( true ) );
     }
@@ -199,7 +199,7 @@ function searchButton( interaction )
         .setStyle( ButtonStyle.Danger ),
         new ButtonBuilder()
         .setCustomId( 'InteractionUserName' )
-        .setLabel( `Requested by ${interaction.user.username + '#' + interaction.user.discriminator}` )
+        .setLabel( `Requested by @${interaction.user.username}` )
         .setStyle( ButtonStyle.Secondary )
         .setDisabled( true ) );
     

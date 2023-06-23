@@ -44,7 +44,7 @@ module.exports =
             .setThumbnail( `https://img.youtube.com/vi/${currentSong.id}/mqdefault.jpg` )
             .setDescription( `[${currentSong.title}](https://www.youtube.com/watch?v=${currentSong.id})\n\n${playtime}  ` + bar + `  ${time}` )
             .setColor( '#C7C7C7' )
-            .setFooter( { text: `Added by ${currentSong.user.username}#${currentSong.user.discriminator}`, iconURL: currentSong.user.displayAvatarURL( ) } )
+            .setFooter( { text: `Added by @${currentSong.user.username}`, iconURL: currentSong.user.displayAvatarURL( ) } )
             .setAuthor(
                 {
                     name : currentSong.author.name,

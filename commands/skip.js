@@ -57,7 +57,7 @@ module.exports = {
                 const skiemb = new EmbedBuilder( )
                     .setColor( '#535353' )
                     .setTitle( `:track_next:  ${ val == 0 ? '스킵' : '해당 트랙이 제거' }되었습니다!` )
-                    .setFooter( { text: `Added by ${temp_tilt.user.username}#${temp_tilt.user.discriminator}`, iconURL: temp_tilt.user.displayAvatarURL( ) } )
+                    .setFooter( { text: `Added by @${temp_tilt.user.username}`, iconURL: temp_tilt.user.displayAvatarURL( ) } )
                     .setDescription( `[${temp_tilt.title}](https://www.youtube.com/watch?v=${temp_tilt.id})` )
                     .setThumbnail( `https://img.youtube.com/vi/${temp_tilt.id}/mqdefault.jpg` );
 
