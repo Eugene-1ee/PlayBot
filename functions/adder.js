@@ -17,9 +17,7 @@ let { connection, player, playlist, resource, station } = require( '../functions
  */
 async function adder( interaction, title, id, length, author, isList )
 {
-    if ( !connection[ interaction.guild.id ]
-        || await getVoiceConnection( interaction.guild.id )._state.status !== 'ready'
-        && await getVoiceConnection( interaction.guild.id )._state.status !== 'signalling' )
+    if ( !connection[ interaction.guild.id ] || await getVoiceConnection( interaction.guild.id )?.state?.status == 'disconnected' )
     {
         cleanup( interaction.guild.id );
         connection[ interaction.guild.id ] = joinVoiceChannel(
