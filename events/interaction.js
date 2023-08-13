@@ -20,7 +20,7 @@ module.exports =
 
         try
         {
-            console.log( `#${interaction.channel.name} <${interaction.user.tag}> [${interaction.commandName}]` );
+            console.log( `#${interaction.channel.name} <@${interaction.user.username}> [${interaction.commandName}]` );
             await command.execute( interaction );
         }
         catch ( error )
