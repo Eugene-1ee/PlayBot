@@ -69,7 +69,7 @@ function usercheck( interaction )
     {
         check = new EmbedBuilder( )
             .setTitle( '통화방에 먼저 접속해주세요!' )
-            .setDescription( '음악이 채팅으로 나올거라 생각했나봐요?' );
+            .setDescription( '음악이 채팅으로 나올거라 생각했나요?' );
     }
     else if ( getVoiceConnection( interaction.guildId ) )
     {

@@ -24,7 +24,7 @@ module.exports =
         }
         else if ( error.message == 'Status code: 403' )
         {
-            console.log( '노래 로딩 재시도 프로세스 실행' );
+            console.log( '로딩 재시도 프로세스 실행' );
 
             const interaction = error.resource.interaction;
 
