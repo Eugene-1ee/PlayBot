@@ -9,19 +9,28 @@ let { connection, player, playlist, resource, station } = require( '../functions
  * @param {} interaction
  * @param { string } track 트랙 번호
  */
-function skiper( interaction, track, callback )
+function skiper( interaction, track, callback, isreapet = false )
 {
-    delete playlist[ interaction.guild.id ][ track ];
-            
-    let temp_plist = playlist[ interaction.guild.id ];
-    playlist[ interaction.guild.id ] = new Map( );
-
-    let counter = 0;
-
-    for ( let unter in temp_plist )
+    if ( isreapet )
     {
-        playlist[ interaction.guild.id ][ counter ] = temp_plist[ unter ];
-        counter++;
+        playlist[ interaction.guild.id ] = playlist[ interaction.guild.id ];
+    }
+    else
+    {
+        delete playlist[ interaction.guild.id ][ track ];
+
+        let temp_plist = playlist[ interaction.guild.id ];
+        playlist[ interaction.guild.id ] = new Map( );
+
+        let counter = 0;
+
+        for ( let unter in temp_plist )
+        {
+            playlist[ interaction.guild.id ][ counter ] = temp_plist[ unter ];
+            counter++;
+        }
+
+        delete temp_plist;
     }
 
     if ( !playlist[ interaction.guild.id ][ 0 ] )

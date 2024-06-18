@@ -42,29 +42,17 @@ async function play( interaction, title, id, length, author, user, next )
 
     player[ interaction.guild.id ].play( resource[ interaction.guild.id ] );
 
-    // 에러 발생했을때 대처방법 생각하기
+    // 에러 발생했을때 대처방법 생각하기 + 실패!
     player[ interaction.guild.id ].once( AudioPlayerStatus.Idle, async ( ) =>
     {
-        if ( station[ interaction.guild.id ] === 'repeat' )
-        {
-            const { adder } = require( '../functions/adder.js' );
-
-            await adder( interaction, title, id, length, author, user, true );
-            return skiper( interaction, 0, ( ) => { } );
-        }
-
-        if ( !playlist[ interaction.guild.id ][ 1 ] && station[ interaction.guild.id ] )
+        if ( ( !playlist[ interaction.guild.id ][ 1 ] && station[ interaction.guild.id ] == 'on' )
+            || station[ interaction.guild.id ] == 'song' || station[ interaction.guild.id ] == 'queue' )
         {
             return stat_handler( interaction, interaction.guild.id );
         }
 
         return skiper( interaction, 0, ( ) => { } );
     } );
-
-    if ( station[ interaction.guild.id ] === 'repeat' || !next )
-    {
-        return;
-    }
     
     const playemb = new EmbedBuilder( )
         .setColor( '#EAEAEA' )
@@ -76,9 +64,17 @@ async function play( interaction, title, id, length, author, user, next )
     {
         playemb.setTitle( ':notes: Now Playing' );
     }
-    else
+    else if ( station[ interaction.guild.id ] == 'on' )
     {
         playemb.setTitle( ':fire: Now Playing' );
+    }
+    else if ( station[ interaction.guild.id ] == 'song' )
+    {
+        playemb.setTitle( ':repeat_one: Now Playing' );
+    }
+    else
+    {
+        playemb.setTitle( ':repeat: Now Playing' );
     }
 
     interaction.channel.send( { embeds: [ playemb ] } )

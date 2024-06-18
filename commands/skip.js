@@ -37,6 +37,11 @@ module.exports = {
             return;
         }
 
+        if ( station[ interaction.guild.id ] == 'song' )
+        {
+            return interaction.reply( { embeds: [ erremb( '이게 무슨 버그인지는 모르겠는데;;;;\n노래 반복을 켜놓은 상태로 스킵하면 봇이 망가져요...\n스킵하려면 반복 해제하고 해주세요...' ) ] } );
+        }
+
         val = parseInt( val );
 
         if ( !val || val == 0 )

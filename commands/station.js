@@ -24,7 +24,7 @@ module.exports = {
     
 	async execute( interaction )
     {
-        let val = interaction.options.getSubcommand();;
+        let val = interaction.options.getSubcommand();
 
         if ( songcheck( interaction ) )
         {
@@ -64,7 +64,7 @@ module.exports = {
         // else
         // {
 
-        if ( station[ interaction.guild.id ] === 'repeat' )
+        if ( station[ interaction.guild.id ] === 'song' || station[ interaction.guild.id ] === 'queue' )
         {
             interaction.reply( { embeds: [ erremb( '반복 기능이 이미 활성화 되어있습니다!\n스테이션 기능은 반복 기능과 동시에 사용할 수 없습니다.' ) ] } );
             return;

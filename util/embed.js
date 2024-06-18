@@ -59,11 +59,26 @@ function queue( interaction, page )
     const currentSong = queue[ 0 ];
     const currentTime = timeConvert( Number( currentSong.length ) - parseInt( player[ interaction.guild.id ]._state.playbackDuration / 1000 ) );
     
+    let mark = '';
+
+    if ( station[ interaction.guild.id ] == 'on' )
+    {
+        mark = ':fire:';
+    }
+    else if ( station[ interaction.guild.id ] == 'song' )
+    {
+        mark = ':repeat_one:';
+    }
+    else if ( station[ interaction.guild.id ] == 'queue' )
+    {
+        mark = ':repeat:'
+    }
+
     if ( queue.length == 1 ) //When there are no songs in the queue:
     {
         const embed = new EmbedBuilder( )
         .setTitle( `Music Queue (0 tracks)` )
-        .setDescription( `**Now Playing**\n[${currentSong.title}](https://www.youtube.com/watch?v=${currentSong.id}) ${currentTime} left\n-${currentSong.user}` )
+        .setDescription( `**Now Playing**${mark}\n[${currentSong.title}](https://www.youtube.com/watch?v=${currentSong.id}) ${currentTime} left\n-${currentSong.user}` )
         .setThumbnail( `https://img.youtube.com/vi/${currentSong.id}/mqdefault.jpg` )
         .setColor( '#C7C7C7' );
 
@@ -82,7 +97,7 @@ function queue( interaction, page )
 
         const embed = new EmbedBuilder( )
             .setTitle( `Music Queue (${queue.length - 1} tracks)` )
-            .setDescription( `**Now Playing**\n[${currentSong.title}](https://www.youtube.com/watch?v=${currentSong.id}) ${currentTime} left\n${currentSong.user}\n\n${queueString}` )
+            .setDescription( `**Now Playing**${mark}\n[${currentSong.title}](https://www.youtube.com/watch?v=${currentSong.id}) ${currentTime} left\n${currentSong.user}\n\n${queueString}` )
             .setThumbnail( `https://img.youtube.com/vi/${currentSong.id}/mqdefault.jpg` )
             .setColor( '#C7C7C7' );
 

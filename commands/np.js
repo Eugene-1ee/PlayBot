@@ -30,13 +30,17 @@ module.exports =
 
         let mark = ':notes:';
 
-        if ( station[ interaction.guild.id ] == 'repeat' )
-        {
-            mark = ':repeat:';
-        }
-        else if ( station[ interaction.guild.id ] )
+        if ( station[ interaction.guild.id ] == 'on' )
         {
             mark = ':fire:';
+        }
+        else if ( station[ interaction.guild.id ] == 'song' )
+        {
+            mark = ':repeat_one:';
+        }
+        else if ( station[ interaction.guild.id ] == 'queue' )
+        {
+            mark = ':repeat:'
         }
 
         const embed = new EmbedBuilder( )
